@@ -1,1 +1,2 @@
-<sf-form [schema]="mySchema" [bindings]="myFieldBindings"></sf-form>
+<sf-form [schema]="mySchema" (onChange)="value=$event.value"></sf-form>
+<pre>{{value | json : 4}}</pre>
