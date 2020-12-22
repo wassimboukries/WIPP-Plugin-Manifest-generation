@@ -12,7 +12,6 @@ jobs:
     - uses: actions/checkout@v2
     - run: |
         npm install
-        npm run build
         npm run start
      
   build:
