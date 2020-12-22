@@ -10,9 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v1
-    - run: |
-        npm install
-        npm run all
+    - run: npm run all
      
   build:
 
