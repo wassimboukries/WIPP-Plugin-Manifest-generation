@@ -26,3 +26,4 @@ jobs:
         github_access_token: ${{ secrets.YOUR_SECRET }} # see the Configuration section for how you can create secrets
         base_href: /WIPP-Plugin-Manifest-generation/   # make sure this corresponds to https://<your_username>.github.io/<base_href>/
         deploy_branch: gh-pages # The branch the action should deploy to.
+        angular_dist_build_folder: dist/testing-app 
