@@ -9,6 +9,9 @@ import { FormProperty, PropertyGroup } from 'ngx-schema-form';
 export class AppComponent {
  value: any;
 
+ 
+
+
   mySchema = 
   {
   "$schema": "http://json-schema.org/draft-07/schema#",
@@ -167,6 +170,9 @@ export class AppComponent {
           "type": {
             "$id": "#/properties/inputs/items/properties/type",
             "type": "string",
+            "widget": {
+              "id": "select"
+            },
             "enum": [
               "collection",
               "stitchingVector",
@@ -452,6 +458,9 @@ export class AppComponent {
           "type": {
             "$id": "#/properties/outputs/items/properties/type",
             "type": "string",
+            "widget": {
+              "id": "select"
+            },
             "enum": [
               "collection",
               "stitchingVector",
