@@ -1,0 +1,7 @@
+.ng-invalid {
+    color: red !important
+}
+
+body {
+    background-color: grey;
+}

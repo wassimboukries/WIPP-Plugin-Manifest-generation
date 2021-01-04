@@ -9,7 +9,25 @@ import { FormProperty, PropertyGroup } from 'ngx-schema-form';
 export class AppComponent {
  value: any;
 
- 
+ ngOnInit()
+  {
+    window.onload = () => {
+        var nameID = document.getElementById("name");
+        var input = document.getElementsByClassName('form-group');
+        for(let i=0; i<input.length; ++i)
+        {  
+          input[i].className += " was-validated";
+          var div1 = document.createElement('div');
+          div1.className = "valid-feedback";
+          div1.innerHTML = "Valid.";
+          var div2 = document.createElement('div');
+          div1.className = "invalid-feedback";
+          div1.innerHTML = "Please fill out this field.";
+          input[i].appendChild(div1);
+          input[i].appendChild(div2);
+        }
+  }};
+
 
 
   mySchema = 
@@ -192,7 +210,8 @@ export class AppComponent {
               "collection",
               "string",
               "number"
-            ]
+            ],
+            "required" : true,
           },
           "description": {
             "$id": "#/properties/inputs/items/properties/description",
@@ -426,8 +445,9 @@ export class AppComponent {
               }
             }
         ]
-      }
+      },
     },
+    
     "outputs": {
       "$id": "#/properties/outputs",
       "type": "array",
@@ -487,7 +507,7 @@ export class AppComponent {
         }
       }
     },
-    "ui": {
+      "ui": {
       "$id": "#/properties/ui",
       "type": "array",
       "title": "Plugin form UI definition",
@@ -502,7 +522,7 @@ export class AppComponent {
               "key": {
                 "$id": "#/properties/ui/items/properties/key",
                 "type": "string",
-                "title": "UI key",
+                "title": "UI key ",
                 "description": "Key of the input which this UI definition applies to, the expected format is 'inputs.inputName'. Special keyword 'fieldsets' can be used to define arrangement of inputs by sections.",
                 "examples": [
                   "inputs.inputImages", "inputs.fileNamPattern", "fieldsets"
@@ -638,6 +658,35 @@ export class AppComponent {
         }
     }
     }
+  };
+
+
+  myFieldBindings = {
+    '/name': [
+      {
+        'input': (event, formProperty: FormProperty) => {
+          const parent: PropertyGroup = formProperty.findRoot();
+
+          /**
+           * Set the input value for the children
+           */
+          const child1: FormProperty = parent.getProperty('children/0/name');
+
+          parent.getProperty('')
+          child1.setValue(formProperty.value, false);
+
+          const child2: FormProperty = parent.getProperty('children/1/name');
+          child2.setValue(event.target.value, false);
+
+          /**
+           * Get the input value for all the children
+           */
+          for (const objectProperty of parent.getProperty('children').properties) {
+            console.log('Value for child ', objectProperty, objectProperty.properties['name'].value);
+          }
+        }
+      }
+    ]
   };
 }
 
