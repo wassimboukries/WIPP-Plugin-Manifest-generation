@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { FormProperty, PropertyGroup } from 'ngx-schema-form';
+import { ButtonComponent } from 'ngx-schema-form/lib/template-schema/button/button.component';
 
 @Component({
   selector: 'app-root',
@@ -11,26 +12,25 @@ export class AppComponent {
 
  ngOnInit()
   {
+    
+
     window.onload = () => {
-        var nameID = document.getElementById("name");
-        var input = document.getElementsByClassName('form-group');
-        for(let i=0; i<input.length; ++i)
-        {  
-          input[i].className += " was-validated";
-          var div1 = document.createElement('div');
-          div1.className = "valid-feedback";
-          div1.innerHTML = "Valid.";
-          var div2 = document.createElement('div');
-          div1.className = "invalid-feedback";
-          div1.innerHTML = "Please fill out this field.";
-          input[i].appendChild(div1);
-          input[i].appendChild(div2);
-        }
-  }};
+        var btnAdd0 : HTMLElement = document.getElementsByClassName('array-add-button')[0] as HTMLElement;
+        var btnAdd2 : HTMLElement = document.getElementsByClassName('array-add-button')[2] as HTMLElement;
+        btnAdd0.addEventListener("click", () => {
+          btnAdd2.click();
+        });
+        var btnRemove0 : HTMLElement = document.getElementsByClassName('array-remove-button')[0] as HTMLElement;
+        var btnRemove2 : HTMLElement = document.getElementsByClassName('array-remove-button')[2] as HTMLElement;
+        btnRemove0.addEventListener("click", () => {
+          btnRemove2.click();
+          alert("clicked!");
+        });
+  }
+};
 
 
-
-  mySchema = 
+mySchema = 
   {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "https://raw.githubusercontent.com/usnistgov/WIPP-Plugins-base-templates/master/plugin-manifest/schema/wipp-plugin-manifest-schema.json",
@@ -146,7 +146,7 @@ export class AppComponent {
       "$id": "#/properties/containerId",
       "type": "string",
       "title": "ContainerId",
-      "description": "Docker image ID",
+      "placeholder": "Docker image ID",
       "default": "",
       "examples": [
         "wipp/example-plugin:1.0.0"
@@ -157,7 +157,7 @@ export class AppComponent {
       "$id": "#/properties/inputs",
       "type": "array",
       "title": "List of Inputs",
-      "description": "Defines inputs to the plugin",
+      "placeholder": "Defines inputs to the plugin",
       "default": null,
       "uniqueItems": true,
       "items": {
@@ -176,7 +176,7 @@ export class AppComponent {
             "$id": "#/properties/inputs/items/properties/name",
             "type": "string",
             "title": "Input name",
-            "description": "Input name as expected by the plugin CLI",
+            "placeholder": "Input name as expected by the plugin CLI",
             "default": "",
             "examples": [
               "inputImages",
@@ -233,218 +233,7 @@ export class AppComponent {
             ]
           }
         },
-        "allOf": [
-            {
-              "if": {
-                "properties": { "type": { "const": "enum" } }
-              },
-              "then": {
-                "properties": 
-                { 
-                    "options": 
-                    {
-                        "$id": "#/properties/inputs/items/properties/options",
-                        "type": "object",
-                        "title": "Input options",
-                        "properties":
-                        {
-                            "values": 
-                            {
-                              "type": "array",
-                              "description": "List of possible values",
-                              "items":
-                              {
-                                "type": "string"
-                              },
-                              "uniqueItems": true
-                            }
-                        }
-                    } 
-                }
-              }
-            },
-            {
-              "if": {
-                "properties": { "type": { "const": "array" } }
-              },
-              "then": {
-                "properties": 
-                { 
-                    "options": 
-                    {
-                        "$id": "#/properties/inputs/items/properties/options",
-                        "type": "object",
-                        "title": "Input options",
-                        "properties":
-                        {
-                            "items": {
-                            "$id": "#/properties/inputs/items/properties/options/properties/items",
-                            "type": "object",
-                            "title": "List of array items",
-                            "description": "Possible values for the input array",
-                            "default": {},
-                            "required": [
-                                "type",
-                                "title",
-                                "oneOf",
-                                "default",
-                                "widget",
-                                "minItems",
-                                "uniqueItems"
-                            ],
-                            "properties": {
-                                "type": {
-                                    "$id": "#/properties/inputs/items/properties/options/properties/items/properties/type",
-                                    "type": "string",
-                                    "title": "Items type",
-                                    "description": "Type of the items to be selected",
-                                    "enum": ["string"],
-                                    "examples": [
-                                        "string"
-                                    ]
-                                },
-                                "title": {
-                                    "$id": "#/properties/inputs/items/properties/options/properties/items/properties/title",
-                                    "type": "string",
-                                    "title": "Selection title",
-                                    "description": "Title of the item selection section in the form",
-                                    "default": "",
-                                    "examples": [
-                                        "Select feature"
-                                    ]
-                                },
-                                "oneOf": {
-                                    "$id": "#/properties/inputs/items/properties/options/properties/items/properties/oneOf",
-                                    "type": "array",
-                                    "title": "Possible items",
-                                    "description": "List of possible items",
-                                    "default": [],
-                                    "items": {
-                                        "$id": "#/properties/inputs/items/properties/options/properties/items/properties/oneOf/items",
-                                        "type": "object",
-                                        "title": "Items definition",
-                                        "description": "Description of the possible items",
-                                        "default": {},
-                                        "required": [
-                                            "description",
-                                            "enum"
-                                        ],
-                                        "properties": {
-                                            "description": {
-                                                "$id": "#/properties/inputs/items/properties/options/properties/items/properties/oneOf/items/properties/description",
-                                                "type": "string",
-                                                "title": "Description",
-                                                "description": "Description of the value that will appear in the form",
-                                                "default": "",
-                                                "examples": [
-                                                    "Area"
-                                                ]
-                                            },
-                                            "enum": {
-                                                "$id": "#/properties/inputs/items/properties/options/properties/items/properties/oneOf/items/properties/enum",
-                                                "type": "array",
-                                                "title": "Value",
-                                                "description": "Values of the selected item",
-                                                "default": [],
-                                                "items": {
-                                                    "$id": "#/properties/inputs/items/properties/options/properties/items/properties/oneOf/items/properties/enum/items",
-                                                    "type": "string",
-                                                    "title": "List of values",
-                                                    "description": "List of values associated with the selected item (usually one value)",
-                                                    "default": "",
-                                                    "examples": [
-                                                        "Feature2DJava_Area"
-                                                    ]
-                                                }
-                                            }
-                                        },
-                                        "examples": [
-                                            {
-                                                "description": "Area",
-                                                "enum": [
-                                                    "Feature2DJava_Area"
-                                                ]
-                                            },
-                                            {
-                                                "enum": [
-                                                    "Feature2DJava_Mean"
-                                                ],
-                                                "description": "Mean"
-                                            }
-                                        ]
-                                    }
-                                },
-                                "default": {
-                                    "$id": "#/properties/inputs/items/properties/options/properties/items/properties/default",
-                                    "type": "string",
-                                    "title": "Default value",
-                                    "description": "Value selected by default (must be one of the possible values)",
-                                    "default": "",
-                                    "examples": [
-                                        "Feature2DJava_Area"
-                                    ]
-                                },
-                                "widget": {
-                                    "$id": "#/properties/inputs/items/properties/options/properties/items/properties/widget",
-                                    "type": "string",
-                                    "title": "Item selection widget",
-                                    "description": "How items can be selected (select -> dropdown list with add/remove buttons, checkbox -> multi-selection from list)",
-                                    "enum": ["select", "checkbox"],
-                                    "examples": [
-                                        "select"
-                                    ]
-                                },
-                                "minItems": {
-                                    "$id": "#/properties/inputs/items/properties/options/properties/items/properties/minItems",
-                                    "type": "integer",
-                                    "title": "Minumum number of items",
-                                    "description": "Minumum number of items",
-                                    "default": 0,
-                                    "examples": [
-                                        1
-                                    ]
-                                },
-                                "uniqueItems": {
-                                    "$id": "#/properties/inputs/items/properties/options/properties/items/properties/uniqueItems",
-                                    "type": ["string", "boolean"],
-                                    "title": "Uniqueness of the items",
-                                    "description": "Whether items in the array have to be unique",
-                                    "examples": [
-                                        "true", true
-                                    ]
-                                }
-                            },
-                            "examples": [
-                                {
-                                    "type": "string",
-                                    "widget": "select",
-                                    "uniqueItems": "true",
-                                    "default": "Feature2DJava_Area",
-                                    "minItems": 1,
-                                    "title": "Select feature",
-                                    "oneOf": [
-                                        {
-                                            "description": "Area",
-                                            "enum": [
-                                                "Feature2DJava_Area"
-                                            ]
-                                        },
-                                        {
-                                            "description": "Mean",
-                                            "enum": [
-                                                "Feature2DJava_Mean"
-                                            ]
-                                        }
-                                    ]
-                                }
-                            ]
-                        }
-                    } 
-                    }
-                }
-              }
-            }
-        ]
+
       },
     },
     
@@ -662,7 +451,7 @@ export class AppComponent {
 
 
   myFieldBindings = {
-    '/name': [
+    '/inputs': [
       {
         'input': (event, formProperty: FormProperty) => {
           const parent: PropertyGroup = formProperty.findRoot();
@@ -670,23 +459,33 @@ export class AppComponent {
           /**
            * Set the input value for the children
            */
-          const child1: FormProperty = parent.getProperty('children/0/name');
+          
+          let i :number =0;
 
-          parent.getProperty('')
-          child1.setValue(formProperty.value, false);
+          for (const objectProperty of parent.getProperty('inputs').properties)
+          {
+            
+            const idKey : string = "ui/" + i + "/key";
+            const child2: FormProperty = objectProperty.properties['name'];
+            const child1: FormProperty = parent.getProperty(idKey);
+            child1.setValue(child2.value, false);
+            ++i;
+          }
 
-          const child2: FormProperty = parent.getProperty('children/1/name');
-          child2.setValue(event.target.value, false);
+         
+          //child2.setValue(formProperty.value, false);
 
           /**
            * Get the input value for all the children
            */
-          for (const objectProperty of parent.getProperty('children').properties) {
-            console.log('Value for child ', objectProperty, objectProperty.properties['name'].value);
-          }
-        }
+        } 
       }
     ]
   };
+
+
+  /*myValidators = {
+    "/inputs/items/properties/name"
+  }*/
 }
 

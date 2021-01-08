@@ -1,7 +1,7 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-5">
-            <sf-form [schema]="mySchema" (onChange)="value=$event.value"></sf-form>
+            <sf-form [schema]="mySchema" (onChange)="value=$event.value" [bindings]="myFieldBindings"></sf-form>
         </div>
 
         <div class="col-md-5">
