@@ -10,24 +10,152 @@ import { ButtonComponent } from 'ngx-schema-form/lib/template-schema/button/butt
 export class AppComponent {
  value: any;
 
- ngOnInit()
-  {
+ 
+ ngOnInit() // bindings
+ {  
+   window.onload = () => {
+       var btnAdd0 : HTMLElement = document.getElementsByClassName('array-add-button')[0] as HTMLElement;
+       var btnAdd2 : HTMLElement = document.getElementsByClassName('array-add-button')[2] as HTMLElement;
+       btnAdd0.addEventListener("click", () => {
+         btnAdd2.click();
+       });
+       /*var btnRemove0 : HTMLElement = document.getElementsByClassName('array-remove-button')[0] as HTMLElement;
+       var btnRemove2 : HTMLElement = document.getElementsByClassName('array-remove-button')[2] as HTMLElement;
+       btnRemove0.addEventListener("click", () => {
+         btnRemove2.click();
+         alert("clicked!");
+       });*/
+   }
+ };
     
+ ngAfterViewInit() // validators
+ {
+        var input = document.getElementsByClassName('form-group');
+        var inputElt;
+        var inpout = ["inputs", "outputs"];
 
-    window.onload = () => {
-        var btnAdd0 : HTMLElement = document.getElementsByClassName('array-add-button')[0] as HTMLElement;
-        var btnAdd2 : HTMLElement = document.getElementsByClassName('array-add-button')[2] as HTMLElement;
-        btnAdd0.addEventListener("click", () => {
-          btnAdd2.click();
+        for(let i = 0; i < 10; i++)
+        {
+          inputElt = input[i].getElementsByTagName("input")[0];
+          document.getElementById(inputElt.id).setAttribute("autocomplete", "off");
+          if (inputElt.id == "repository" || inputElt.id == "website") continue;
+          inputElt.addEventListener("input", (event) => inputEventFirstCases(event, this.mySchema));
+          inputElt.addEventListener("focusout", function (event) {
+            var spanId; 
+            spanId = event.target.id + "Status";
+            if (document.getElementById(spanId) != null)
+              document.getElementById(spanId).remove();
+          });
+        }
+        
+        for(let i = 0; i < 2; i++)
+        {
+          inputElt = input[10 + i];
+          inputElt.addEventListener("input", (event) => inputEventInputsOutputs(event, this.mySchema, i));
+          inputElt.addEventListener("focusout", function (event) {
+            var spanId;
+            if((new RegExp(inpout[i] +'.[0-9]+.name').test(event.target.id)) || (new RegExp(inpout[i] +'.[0-9]+.description').test(event.target.id)))
+            {
+              spanId = inpout[i] + "." + event.target.id.substr(7,1) + ".description" + "Status";
+              if((new RegExp(inpout[i] +'.[0-9]+.name').test(event.target.id))) spanId = inpout[i] + "." + event.target.id.substr(7,1) + ".name" + "Status";
+              if (document.getElementById(spanId) != null)
+                document.getElementById(spanId).remove();
+            }
+          }); 
+        }
+
+        inputElt = input[12];
+        inputElt.addEventListener("input", (event) => inputEventUi(event, this.mySchema));
+        inputElt.addEventListener("focusout", function (event) {
+          var spanId;
+          if((new RegExp('inputs.[0-9]+.key').test(event.target.id)))
+          {
+            spanId = "ui." + event.target.id.substr(7,1) + "." + "key" + "Status";
+            if (document.getElementById(spanId) != null)
+              document.getElementById(spanId).remove();
+          }
         });
-        var btnRemove0 : HTMLElement = document.getElementsByClassName('array-remove-button')[0] as HTMLElement;
-        var btnRemove2 : HTMLElement = document.getElementsByClassName('array-remove-button')[2] as HTMLElement;
-        btnRemove0.addEventListener("click", () => {
-          btnRemove2.click();
-          alert("clicked!");
-        });
-  }
-};
+
+        function inputEventFirstCases(event, mySchema)
+        {
+          var spanElt;
+          var spanId = event.target.id + "Status";
+          var patt = new RegExp(mySchema.properties[event.target.id].pattern);
+          if (document.getElementById(spanId) == null)
+          {
+            spanElt = document.createElement('span');
+            spanElt.setAttribute("id", spanId);
+            event.target.after(spanElt);
+          }
+          if (patt.test((<HTMLTextAreaElement>event.target).value))
+          {
+            document.getElementById(spanId).textContent = "Valid";
+            document.getElementById(spanId).style.color = "green";
+          }
+          else {
+            document.getElementById(spanId).textContent = "Invalid, your input must match the pattern : " + patt;
+            document.getElementById(spanId).style.color = "red";
+          }
+        }
+
+        function inputEventInputsOutputs(event, mySchema, i)
+        {
+          var spanElt;
+          var spanId;
+          var patt;
+          var clickedTag;
+          if( (new RegExp(inpout[i] +'.[0-9]+.name').test(event.target.id)) || (new RegExp(inpout[i] +'.[0-9]+.description').test(event.target.id)))
+          {
+            clickedTag = "description";
+            if((new RegExp(inpout[i] +'.[0-9]+.name').test(event.target.id))) clickedTag = "name";
+            patt = new RegExp(mySchema.properties[inpout[i]]["items"].properties[clickedTag].pattern);
+            spanId = inpout[i] + "." + event.target.id.substr(7,1) + "." + clickedTag + "Status";
+            if (document.getElementById(spanId) == null)
+            {
+              spanElt = document.createElement('span');
+              spanElt.setAttribute("id", spanId);
+              event.target.after(spanElt);
+            }
+            if (patt.test((<HTMLTextAreaElement>event.target).value))
+            {
+              document.getElementById(spanId).textContent = "Valid";
+              document.getElementById(spanId).style.color = "green";
+            }
+            else {
+              document.getElementById(spanId).textContent = "Invalid, your input must match the pattern : " + patt;
+              document.getElementById(spanId).style.color = "red";
+            }
+          }
+        }
+
+        function inputEventUi(event, mySchema)
+        {
+          var spanElt;
+          var spanId;
+          var patt;
+          if((new RegExp('ui.[0-9]+.key').test(event.target.id)))
+          {
+            patt = new RegExp(mySchema.properties["ui"]["items"].properties["key"]["oneOf"][0].pattern);
+            spanId = "ui." + event.target.id.substr(7,1) + "." + "key" + "Status";
+            
+            if (document.getElementById(spanId) == null)
+            {
+              spanElt = document.createElement('span');
+              spanElt.setAttribute("id", spanId);
+              event.target.after(spanElt);
+            }
+            if (patt.test((<HTMLTextAreaElement>event.target).value) || (<HTMLTextAreaElement>event.target).value == "fieldsets")
+            {
+              document.getElementById(spanId).textContent = "Valid";
+              document.getElementById(spanId).style.color = "green";
+            }
+            else {
+              document.getElementById(spanId).textContent = "Invalid, your input must match the pattern : " + patt + ", or be equal to fieldsets";
+              document.getElementById(spanId).style.color = "red";
+            }
+          }
+        }
+  };
 
 
 mySchema = 
@@ -455,37 +583,18 @@ mySchema =
       {
         'input': (event, formProperty: FormProperty) => {
           const parent: PropertyGroup = formProperty.findRoot();
-
-          /**
-           * Set the input value for the children
-           */
-          
           let i :number =0;
-
           for (const objectProperty of parent.getProperty('inputs').properties)
           {
-            
             const idKey : string = "ui/" + i + "/key";
             const child2: FormProperty = objectProperty.properties['name'];
             const child1: FormProperty = parent.getProperty(idKey);
-            child1.setValue(child2.value, false);
+            child1.setValue("inputs." + child2.value, false);
             ++i;
           }
-
-         
-          //child2.setValue(formProperty.value, false);
-
-          /**
-           * Get the input value for all the children
-           */
         } 
       }
     ]
   };
-
-
-  /*myValidators = {
-    "/inputs/items/properties/name"
-  }*/
 }
 
