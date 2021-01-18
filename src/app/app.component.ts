@@ -454,12 +454,8 @@ mySchema =
     '/inputs': [
       {
         'input': (event, formProperty: FormProperty) => {
-          const parent: PropertyGroup = formProperty.findRoot();
 
-          /**
-           * Set the input value for the children
-           */
-          
+          const parent: PropertyGroup = formProperty.findRoot();
           let i :number =0;
 
           for (const objectProperty of parent.getProperty('inputs').properties)
@@ -468,16 +464,9 @@ mySchema =
             const idKey : string = "ui/" + i + "/key";
             const child2: FormProperty = objectProperty.properties['name'];
             const child1: FormProperty = parent.getProperty(idKey);
-            child1.setValue(child2.value, false);
+            child1.setValue("inputs."+child2.value, false);
             ++i;
           }
-
-         
-          //child2.setValue(formProperty.value, false);
-
-          /**
-           * Get the input value for all the children
-           */
         } 
       }
     ]
