@@ -19,12 +19,16 @@ export class AppComponent {
        btnAdd0.addEventListener("click", () => {
          btnAdd2.click();
        });
-       /*var btnRemove0 : HTMLElement = document.getElementsByClassName('array-remove-button')[0] as HTMLElement;
-       var btnRemove2 : HTMLElement = document.getElementsByClassName('array-remove-button')[2] as HTMLElement;
-       btnRemove0.addEventListener("click", () => {
-         btnRemove2.click();
-         alert("clicked!");
-       });*/
+       
+       document.querySelector('body').addEventListener('click', event => {
+         var targett = event.target as HTMLElement;
+         if (targett.matches('.array-remove-button')){
+            var btnRemove2 : HTMLElement = document.getElementsByClassName('array-remove-button')[0] as HTMLElement;
+            btnRemove2.click();
+          }
+       });
+
+           
    }
  };
     
@@ -593,10 +597,6 @@ mySchema =
     '/inputs': [
       {
         'input': (event, formProperty: FormProperty) => {
-<<<<<<< HEAD
-
-=======
->>>>>>> 05412c0bb1b27618c8c5e55d2fd493d2bba1bf46
           const parent: PropertyGroup = formProperty.findRoot();
           let i :number =0;
           for (const objectProperty of parent.getProperty('inputs').properties)
@@ -604,11 +604,7 @@ mySchema =
             const idKey : string = "ui/" + i + "/blockIfPattern/key";
             const child2: FormProperty = objectProperty.properties['name'];
             const child1: FormProperty = parent.getProperty(idKey);
-<<<<<<< HEAD
             child1.setValue("inputs."+child2.value, false);
-=======
-            child1.setValue("inputs." + child2.value, false);
->>>>>>> 05412c0bb1b27618c8c5e55d2fd493d2bba1bf46
             ++i;
           }
         } 
