@@ -1,1 +1,14 @@
 /* You can add global styles to this file, and also import other style files */
+input,
+select {
+  border-color: #ccc !important;
+}
+
+label {
+  color: #333 !important;
+}
+
+*:focus {
+  box-shadow: none !important;
+  border-color: black !important;
+}
