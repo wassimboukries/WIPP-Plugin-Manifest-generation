@@ -4,6 +4,7 @@ import { ButtonComponent } from 'ngx-schema-form/lib/template-schema/button/butt
 import {mySchema} from './WIPP schema.js';
 import {NgbModal, NgbActiveModal, NgbModalConfig} from '@ng-bootstrap/ng-bootstrap';
 import { isWhileStatement } from 'typescript';
+import { ValueConverter } from '@angular/compiler/src/render3/view/template';
 
 @Component({
   selector: 'app-root',
@@ -191,6 +192,8 @@ export class AppComponent {
       }
     ]
   };
+
+  
 
   open(content)
   {

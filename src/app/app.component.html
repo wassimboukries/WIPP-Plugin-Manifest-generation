@@ -6,7 +6,7 @@
       </button>
     </div>
     <div class="modal-body">
-        <pre>{{value | json : 4}}</pre>
+        <sf-form [schema]="value"></sf-form>
     </div>
     <div class="modal-footer">
         <button type="button" class="btn btn-outline-dark" (click)="c('Save click')">Download</button>
@@ -14,12 +14,12 @@
 </ng-template>
 
 <div class="container-fluid">
-    <div class="row">
+    <div class="row page">
         <div class="col-md-5">
             <sf-form [schema]="Schema" (onChange)="value=$event.value" [bindings]="myFieldBindings"></sf-form>
         </div>
 
-        <div class="col-md-5">
+        <div class="col-md- manifest">
             <h3>Manifest:</h3>
             <pre>{{value | json : 4}}</pre>
             <button type="button" class="btn btn-lg btn-outline-primary" (click)="open(content)">Submit</button>
