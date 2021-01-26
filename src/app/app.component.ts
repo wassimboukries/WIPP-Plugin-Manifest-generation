@@ -1,15 +1,25 @@
 import { Component } from '@angular/core';
 import { FormProperty, PropertyGroup } from 'ngx-schema-form';
 import { ButtonComponent } from 'ngx-schema-form/lib/template-schema/button/button.component';
+import {mySchema} from './WIPP schema.js';
+import {NgbModal, NgbActiveModal, NgbModalConfig} from '@ng-bootstrap/ng-bootstrap';
+import { isWhileStatement } from 'typescript';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
+  styleUrls: ['./app.component.css'],
+  providers: [NgbModalConfig, NgbModal]
 })
+
+
 export class AppComponent {
  value: any;
-
+ 
+ constructor(config: NgbModalConfig, private modalService: NgbModal) {
+   config.backdrop = 'static';
+   config.keyboard = false;
+ }
  
  ngOnInit() // bindings
  {  
@@ -26,9 +36,7 @@ export class AppComponent {
             var btnRemove2 : HTMLElement = document.getElementsByClassName('array-remove-button')[0] as HTMLElement;
             btnRemove2.click();
           }
-       });
-
-           
+       });  
    }
  };
     
@@ -43,7 +51,7 @@ export class AppComponent {
           inputElt = input[i].getElementsByTagName("input")[0];
           document.getElementById(inputElt.id).setAttribute("autocomplete", "off");
           if (inputElt.id == "repository" || inputElt.id == "website") continue;
-          inputElt.addEventListener("input", (event) => inputEventFirstCases(event, this.mySchema));
+          inputElt.addEventListener("input", (event) => inputEventFirstCases(event, this.Schema));
           inputElt.addEventListener("focusout", function (event) {
             var spanId; 
             spanId = event.target.id + "Status";
@@ -55,7 +63,7 @@ export class AppComponent {
         for(let i = 0; i < 2; i++)
         {
           inputElt = input[10 + i];
-          inputElt.addEventListener("input", (event) => inputEventInputsOutputs(event, this.mySchema, i));
+          inputElt.addEventListener("input", (event) => inputEventInputsOutputs(event, this.Schema, i));
           inputElt.addEventListener("focusout", function (event) {
             var spanId;
             if((new RegExp(inpout[i] +'.[0-9]+.name').test(event.target.id)) || (new RegExp(inpout[i] +'.[0-9]+.description').test(event.target.id)))
@@ -69,7 +77,7 @@ export class AppComponent {
         }
 
         inputElt = input[12];
-        inputElt.addEventListener("input", (event) => inputEventUi(event, this.mySchema));
+        inputElt.addEventListener("input", (event) => inputEventUi(event, this.Schema));
         inputElt.addEventListener("focusout", function (event) {
           var spanId;
           if((new RegExp('ui.[0-9]+.key').test(event.target.id)))
@@ -80,11 +88,11 @@ export class AppComponent {
           }
         });
 
-        function inputEventFirstCases(event, mySchema)
+        function inputEventFirstCases(event, Schema)
         {
           var spanElt;
           var spanId = event.target.id + "Status";
-          var patt = new RegExp(mySchema.properties[event.target.id].pattern);
+          var patt = new RegExp(Schema.properties[event.target.id].pattern);
           if (document.getElementById(spanId) == null)
           {
             spanElt = document.createElement('span');
@@ -102,7 +110,7 @@ export class AppComponent {
           }
         }
 
-        function inputEventInputsOutputs(event, mySchema, i)
+        function inputEventInputsOutputs(event, Schema, i)
         {
           var spanElt;
           var spanId;
@@ -112,7 +120,7 @@ export class AppComponent {
           {
             clickedTag = "description";
             if((new RegExp(inpout[i] +'.[0-9]+.name').test(event.target.id))) clickedTag = "name";
-            patt = new RegExp(mySchema.properties[inpout[i]]["items"].properties[clickedTag].pattern);
+            patt = new RegExp(Schema.properties[inpout[i]]["items"].properties[clickedTag].pattern);
             spanId = inpout[i] + "." + event.target.id.substr(7,1) + "." + clickedTag + "Status";
             if (document.getElementById(spanId) == null)
             {
@@ -132,14 +140,14 @@ export class AppComponent {
           }
         }
 
-        function inputEventUi(event, mySchema)
+        function inputEventUi(event, Schema)
         {
           var spanElt;
           var spanId;
           var patt;
           if((new RegExp('ui.[0-9]+.key').test(event.target.id)))
           {
-            patt = new RegExp(mySchema.properties["ui"]["items"].properties["key"]["oneOf"][0].pattern);
+            patt = new RegExp(Schema.properties["ui"]["items"].properties["key"]["oneOf"][0].pattern);
             spanId = "ui." + event.target.id.substr(3,1) + "." + "key" + "Status";
             
             if (document.getElementById(spanId) == null)
@@ -162,435 +170,7 @@ export class AppComponent {
   };
 
 
-mySchema = 
-{
-  "$schema":"http://json-schema.org/draft-07/schema#",
-  "$id":"https://raw.githubusercontent.com/usnistgov/WIPP-Plugins-base-templates/master/plugin-manifest/schema/wipp-plugin-manifest-schema.json",
-  "type":"object",
-  "title":"WIPP Plugin manifest",
-  "default":null,
-  "required":[
-     "name",
-     "version",
-     "title",
-     "description",
-     "containerId",
-     "inputs",
-     "outputs",
-     "ui"
-  ],
-  "properties":{
-     "name":{
-        "$id":"#/properties/name",
-        "type":"string",
-        "title":"Name of the plugin",
-        "default":"",
-        "examples":[
-           "My Awesome Plugin"
-        ],
-        "minLength":1,
-        "pattern":"^(.*)$"
-     },
-     "version":{
-        "$id":"#/properties/version",
-        "type":"string",
-        "title":"Plugin version",
-        "default":"",
-        "examples":[
-           "1.0.0"
-        ],
-        "minLength":1,
-        "pattern":"^(.*)$"
-     },
-     "title":{
-        "$id":"#/properties/title",
-        "type":"string",
-        "title":"Plugin title",
-        "default":"",
-        "examples":[
-           "My really awesome plugin"
-        ],
-        "minLength":1,
-        "pattern":"^(.*)$"
-     },
-     "description":{
-        "$id":"#/properties/description",
-        "type":"string",
-        "title":"Description",
-        "default":"",
-        "examples":[
-           "My awesome segmentation algorithm"
-        ],
-        "minLength":1,
-        "pattern":"^(.*)$"
-     },
-     "author":{
-        "$id":"#/properties/author",
-        "type":"string",
-        "title":"Author(s)",
-        "default":"",
-        "examples":[
-           "FirstName LastName"
-        ],
-        "pattern":"^(.*)$"
-     },
-     "institution":{
-        "$id":"#/properties/institution",
-        "type":"string",
-        "title":"Institution",
-        "default":"",
-        "examples":[
-           "National Institute of Standards and Technology"
-        ],
-        "pattern":"^(.*)$"
-     },
-     "repository":{
-        "$id":"#/properties/repository",
-        "type":"string",
-        "title":"Source code repository",
-        "default":"",
-        "examples":[
-           "https://github.com/usnistgov/WIPP"
-        ],
-        "format":"uri"
-     },
-     "website":{
-        "$id":"#/properties/website",
-        "type":"string",
-        "title":"Website",
-        "default":"",
-        "examples":[
-           "http://usnistgov.github.io/WIPP"
-        ],
-        "format":"uri"
-     },
-     "citation":{
-        "$id":"#/properties/citation",
-        "type":"string",
-        "title":"Citation",
-        "default":"",
-        "examples":[
-           "Peter Bajcsy, Joe Chalfoun, and Mylene Simon (2018). Web Microanalysis of Big Image Data. Springer-Verlag International"
-        ],
-        "pattern":"^(.*)$"
-     },
-     "containerId":{
-        "$id":"#/properties/containerId",
-        "type":"string",
-        "title":"ContainerId",
-        "placeholder":"Docker image ID",
-        "default":"",
-        "examples":[
-           "wipp/example-plugin:1.0.0"
-        ],
-        "pattern":"^(.*)$"
-     },
-     "inputs":{
-        "$id":"#/properties/inputs",
-        "type":"array",
-        "title":"List of Inputs",
-        "placeholder":"Defines inputs to the plugin",
-        "default":null,
-        "uniqueItems":true,
-        "items":{
-           "$id":"#/properties/inputs/items",
-           "type":"object",
-           "title":"Input",
-           "description":"Plugin input",
-           "default":null,
-           "required":[
-              "name",
-              "type",
-              "description"
-           ],
-           "properties":{
-              "name":{
-                 "$id":"#/properties/inputs/items/properties/name",
-                 "type":"string",
-                 "title":"Input name",
-                 "placeholder":"Input name as expected by the plugin CLI",
-                 "default":"",
-                 "examples":[
-                    "inputImages",
-                    "fileNamePattern",
-                    "thresholdValue"
-                 ],
-                 "pattern":"^[a-zA-Z0-9][-a-zA-Z0-9]*$"
-              },
-              "type":{
-                 "$id":"#/properties/inputs/items/properties/type",
-                 "type":"string",
-                 "widget":{
-                    "id":"select"
-                 },
-                 "enum":[
-                    "collection",
-                    "stitchingVector",
-                    "tensorflowModel",
-                    "csvCollection",
-                    "pyramid",
-                    "notebook",
-                    "string",
-                    "number",
-                    "integer",
-                    "enum",
-                    "array",
-                    "boolean"
-                 ],
-                 "title":"Input Type",
-                 "examples":[
-                    "collection",
-                    "string",
-                    "number"
-                 ],
-                 "required":true
-              },
-              "description":{
-                 "$id":"#/properties/inputs/items/properties/description",
-                 "type":"string",
-                 "title":"Input description",
-                 "examples":[
-                    "Input Images"
-                 ],
-                 "pattern":"^(.*)$"
-              },
-              "required":{
-                 "$id":"#/properties/inputs/items/properties/required",
-                 "type":"boolean",
-                 "title":"Required input",
-                 "description":"Whether an input is required or not",
-                 "default":true,
-                 "examples":[
-                    true
-                 ]
-              }
-           }
-        }
-     },
-     "outputs":{
-        "$id":"#/properties/outputs",
-        "type":"array",
-        "title":"List of Outputs",
-        "description":"Defines the outputs of the plugin",
-        "default":null,
-        "items":{
-           "$id":"#/properties/outputs/items",
-           "type":"object",
-           "title":"Plugin output",
-           "default":null,
-           "required":[
-              "name",
-              "type",
-              "description"
-           ],
-           "properties":{
-              "name":{
-                 "$id":"#/properties/outputs/items/properties/name",
-                 "type":"string",
-                 "title":"Output name",
-                 "default":"",
-                 "examples":[
-                    "outputCollection"
-                 ],
-                 "pattern":"^[a-zA-Z0-9][-a-zA-Z0-9]*$"
-              },
-              "type":{
-                 "$id":"#/properties/outputs/items/properties/type",
-                 "type":"string",
-                 "widget":{
-                    "id":"select"
-                 },
-                 "enum":[
-                    "collection",
-                    "stitchingVector",
-                    "tensorflowModel",
-                    "tensorboardLogs",
-                    "csvCollection",
-                    "pyramid"
-                 ],
-                 "title":"Output type",
-                 "examples":[
-                    "stitchingVector",
-                    "collection"
-                 ]
-              },
-              "description":{
-                 "$id":"#/properties/outputs/items/properties/description",
-                 "type":"string",
-                 "title":"Output description",
-                 "examples":[
-                    "Output collection"
-                 ],
-                 "pattern":"^(.*)$"
-              }
-           }
-        }
-     },
-     "ui":{
-        "$id":"#/properties/ui",
-        "type":"array",
-        "title":"Plugin form UI definition",
-        "items":{
-           "type":"object",
-           "title":"List of UI definitions",
-           "required":[
-              "key"
-           ],
-           "properties":{
-              "typeOfUi":{
-                "type":"string",
-                "title":"UI type",
-                "default":"^inputs\\.[a-zA-Z0-9][-a-zA-Z0-9]*$",
-                "widget":{
-                  "id":"select"
-                },
-                "oneOf":[
-                   {
-                      "enum":[
-                         "^inputs\\.[a-zA-Z0-9][-a-zA-Z0-9]*$"
-                      ],
-                      "description":"input"
-                   },
-                   {
-                      "enum":[
-                         "fieldsets"
-                      ],
-                      "description":"fieldsets"
-                   }
-                ]
-
-              },
-              "blockIfPattern":{
-                 "type":"object",
-                 "required":[
-                    "title"
-                 ],
-                 "visibleIf":{
-                    "typeOfUi":[
-                       "^inputs\\.[a-zA-Z0-9][-a-zA-Z0-9]*$"
-                    ]
-                 },
-                 "properties":{
-                    "key":{
-                      "$id":"#/properties/ui/items/properties/key",
-                      "type":"string",
-                      "title":"UI key ",
-                      "description":"Key of the input which this UI definition applies to, the expected format is 'inputs.inputName'. Special keyword 'fieldsets' can be used to define arrangement of inputs by sections.",
-                      "examples":[
-                         "inputs.inputImages",
-                         "inputs.fileNamPattern",
-                         "fieldsets"
-                      ],
-                      "pattern": "^inputs\\.[a-zA-Z0-9][-a-zA-Z0-9]*$"
-                    },
-                    "title":{
-                       "$id":"#/properties/ui/items/properties/title",
-                       "type":"string",
-                       "title":"Input label",
-                       "default":"",
-                       "examples":[
-                          "Input images: "
-                       ],
-                       "pattern":"^(.*)$"
-                    },
-                    "description":{
-                       "$id":"#/properties/ui/items/properties/description",
-                       "type":"string",
-                       "title":"Input placeholder",
-                       "default":"",
-                       "examples":[
-                          "Pick a collection..."
-                       ],
-                       "pattern":"^(.*)$"
-                    },
-                    "condition":{
-                       "$id":"#/properties/ui/items/properties/condition",
-                       "type":"string",
-                       "title":"Input visibility condition",
-                       "description":"Definition of when this field is visible or not, depending on the value of another input, the expected format for the condition is 'model.inputs.inputName==value'",
-                       "default":"",
-                       "examples":[
-                          "model.inputs.thresholdtype=='Manual'"
-                       ],
-                       "pattern":"^(.*)$"
-                    },
-                    "hidden":{
-                       "$id":"#/properties/ui/items/properties/hidden",
-                       "type":"boolean",
-                       "title":"Hidden input",
-                       "description":"Hidden input will not be displayed on the form, but can be used in conjunction with the 'default' or 'bind' properties to define default or automatically set parameters",
-                       "default":false,
-                       "examples":[
-                          true,
-                          false
-                       ]
-                    },
-                    "bind":{
-                       "$id":"#/properties/ui/items/properties/bind",
-                       "type":"string",
-                       "title":"Bind input value to another input",
-                       "examples":[
-                          "gridWidth"
-                       ]
-                    }
-                 }
-              },
-              "blockIfFieldsets":{
-                 "type":"object",
-                 "required":[
-                    "fiedsets"
-                 ],
-                 "visibleIf":{
-                    "typeOfUi":[
-                       "fieldsets"
-                    ]
-                 },
-                 "properties":{
-                    "fieldsets":{
-                       "description":"A list of definitions representing sections of input fields.",
-                       "type":"array",
-                       "items":{
-                          "description":"A section of input fields.",
-                          "type":"object",
-                          "properties":{
-                             "title":{
-                                "type":"string",
-                                "description":"The label of the section.",
-                                "examples":[
-                                   "Input images selection"
-                                ]
-                             },
-                             "fields":{
-                                "description":"A list of input names representing input fields that belong to this section.",
-                                "type":"array",
-                                "items":{
-                                   "type":"string"
-                                },
-                                "uniqueItems":true,
-                                "minItems":1,
-                                "examples":[
-                                   "inputImages, fileNamePattern"
-                                ]
-                             }
-                          },
-                          "uniqueItems":true,
-                          "default":[
-                             
-                          ],
-                          "minItems":1,
-                          "required":[
-                             "title",
-                             "fields"
-                          ]
-                       }
-                    }
-                 }
-              }
-           }
-        }
-     }
-  }
-};
+   Schema = mySchema;
 
 
   myFieldBindings = {
@@ -611,5 +191,137 @@ mySchema =
       }
     ]
   };
+
+  open(content)
+  {
+   this.modalService.open(content);
+   console.log("Submited clicked");
+   
+   this.value.properties = {
+      // task name field
+      'taskName': {
+        'type': 'string',
+        'description': 'Task name',
+        'format': 'string',
+        'widget': 'string',
+        'placeholder': 'Enter a name for this task',
+        'maxLength': 127 //- this.workflow.name.length
+      },
+      // job inputs fields
+      'inputs': {
+        'type': 'object',
+        'required': [],
+        'properties': {}
+      }
+    };
+  
+    try {
+      // default field bindings - none
+      this.value.fieldBindings = {};
+      // TODO: validation of manifest ui description
+      this.value.inputs.forEach(input => {
+        const inputSchema = {};
+        // common properties
+        inputSchema['key'] = 'inputs.' + input.name;
+        // inputSchema['description'] = input.description;
+        if (input.required) {
+          this.value.properties.inputs.required.push(input.name);
+        }
+        // type-specific properties
+  
+        switch (input.type) {
+          case 'collection':
+          case 'stitchingVector':
+          case  'pyramidAnnotation':
+          case 'pyramid':
+          case 'tensorflowModel':
+          case 'csvCollection':
+          case 'notebook':
+            inputSchema['type'] = 'string';
+            inputSchema['widget'] = 'search';
+            inputSchema['format'] = input.type;
+            //inputSchema['getOutputs'] = () => this.jobOutputs[input.type];
+            break;
+          case 'enum':
+            inputSchema['type'] = 'string';
+            inputSchema['widget'] = 'select';
+            inputSchema['oneOf'] = [];
+            input.options.values.forEach(value => {
+              inputSchema['oneOf'].push({
+                'enum': [value],
+                'description': value
+              });
+            });
+            inputSchema['default'] = input.options.values[0];
+            break;
+          case 'array':
+            inputSchema['type'] = 'array';
+            inputSchema['format'] = 'array';
+            inputSchema['items'] = input.options.items;
+            break;
+          // Workaround for https://github.com/guillotinaweb/ngx-schema-form/issues/332
+          case 'number':
+          case 'float':
+            inputSchema['type'] = 'string';
+            inputSchema['widget'] = 'integer';
+            break;
+          default:
+            inputSchema['type'] = input.type;
+        }
+        // ui properties
+        const ui = this.value.ui.find(v => v.key === inputSchema['key']);
+        if (ui.hasOwnProperty('title')) {
+          inputSchema['title'] = ui.title;
+        }
+        if (ui.hasOwnProperty('description')) {
+          inputSchema['placeholder'] = ui.description;
+        }
+        if (ui.hasOwnProperty('condition')) {
+          inputSchema['condition'] = ui.condition;
+          const conditionElements = ui.condition.split('==');
+          if (conditionElements.length === 2) {
+            const inputName = conditionElements[0].split('.');
+            if (inputName.length > 0) {
+              inputSchema['visibleIf'] = {};
+              inputSchema['visibleIf'][inputName[inputName.length - 1]] = conditionElements[1];
+            }
+          }
+        }
+        // hidden fields
+        if (ui.hasOwnProperty('hidden') && ui.hidden === true) {
+          inputSchema['widget'] = 'hidden';
+        }
+        // custom bindings - update value of target input from value of source input
+        if (ui.hasOwnProperty('bind')) {
+          const sourceField = '/inputs/' + ui.bind;
+          const targetField = ui['key'].split('.').join('/');
+          this.value.fieldBindings[sourceField] = [
+            {
+              'input': (event, formProperty: FormProperty) => {
+                const parent: PropertyGroup = formProperty.findRoot();
+                const target: FormProperty = parent.getProperty(targetField);
+  
+                target.setValue(formProperty.value, false);
+              }
+            }
+          ];
+        }
+        if (ui.hasOwnProperty('default')) {
+          inputSchema['default'] = ui.default;
+        }
+        this.value.properties.inputs.properties[input.name] = inputSchema;
+      });
+      // field sets - arrange fields by groups
+      const fieldsetsList = this.value.ui.find(v => v.key === 'fieldsets');
+      if (fieldsetsList) {
+        this.value.properties.inputs.fieldsets = fieldsetsList.fieldsets;
+      }
+      this.value.isSchemaValid = true;
+    } catch (error) {
+      console.log(error);
+      this.value.properties = {};
+      this.value.isSchemaValid = false;
+    }
+  }
 }
 
