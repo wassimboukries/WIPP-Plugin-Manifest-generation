@@ -1,9 +1,7 @@
 import { Component } from '@angular/core';
 import { FormProperty, PropertyGroup } from 'ngx-schema-form';
-import { ButtonComponent } from 'ngx-schema-form/lib/template-schema/button/button.component';
 import {mySchema} from './WIPP schema.js';
-import {NgbModal, NgbActiveModal, NgbModalConfig} from '@ng-bootstrap/ng-bootstrap';
-import { isWhileStatement } from 'typescript';
+import {NgbModal, NgbModalConfig} from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-root',
@@ -80,13 +78,67 @@ export class AppComponent {
         inputElt.addEventListener("input", (event) => inputEventUi(event, this.Schema));
         inputElt.addEventListener("focusout", function (event) {
           var spanId;
+          var itemClicked;
+          var quit = 0;
           if((new RegExp('ui.[0-9]+.key').test(event.target.id)))
+            itemClicked = "key";
+          else if (new RegExp('ui.[0-9]+.title').test(event.target.id))
+            itemClicked = "title";
+          else if (new RegExp('ui.[0-9]+.description').test(event.target.id))
+            itemClicked = "description";
+          else if (new RegExp('ui.[0-9]+.condition').test(event.target.id))
+            itemClicked = "condition";
+          else
+            quit = 1;
+
+          if(!quit)
           {
-            spanId = "ui." + event.target.id.substr(3,1) + "." + "key" + "Status";
+            spanId = "ui." + event.target.id.substr(3,1) + "." + itemClicked + "Status";
             if (document.getElementById(spanId) != null)
               document.getElementById(spanId).remove();
           }
         });
+
+        function inputEventUi(event, Schema)
+        {
+          var spanElt;
+          var spanId;
+          var patt;
+          var itemClicked;
+          var quit = 0;
+          if((new RegExp('ui.[0-9]+.key').test(event.target.id)))
+            itemClicked = "key";
+          else if (new RegExp('ui.[0-9]+.title').test(event.target.id))
+            itemClicked = "title";
+          else if (new RegExp('ui.[0-9]+.description').test(event.target.id))
+            itemClicked = "description";
+          else if (new RegExp('ui.[0-9]+.condition').test(event.target.id))
+            itemClicked = "condition";
+          else
+            quit = 1;
+            
+          if(!quit)
+          {
+            patt = new RegExp(Schema.properties["ui"]["items"].properties[itemClicked].pattern);
+            spanId = "ui." + event.target.id.substr(3,1) + "." + itemClicked + "Status";
+            
+            if (document.getElementById(spanId) == null)
+            {
+              spanElt = document.createElement('span');
+              spanElt.setAttribute("id", spanId);
+              event.target.after(spanElt);
+            }
+            if (patt.test((<HTMLTextAreaElement>event.target).value) || (<HTMLTextAreaElement>event.target).value == "fieldsets")
+            {
+              document.getElementById(spanId).textContent = "Valid";
+              document.getElementById(spanId).style.color = "green";
+            }
+            else {
+              document.getElementById(spanId).textContent = "Invalid, your input must match the pattern : " + patt;
+              document.getElementById(spanId).style.color = "red";
+            }
+          }
+        }
 
         function inputEventFirstCases(event, Schema)
         {
@@ -140,33 +192,7 @@ export class AppComponent {
           }
         }
 
-        function inputEventUi(event, Schema)
-        {
-          var spanElt;
-          var spanId;
-          var patt;
-          if((new RegExp('ui.[0-9]+.key').test(event.target.id)))
-          {
-            patt = new RegExp(Schema.properties["ui"]["items"].properties["key"]["oneOf"][0].pattern);
-            spanId = "ui." + event.target.id.substr(3,1) + "." + "key" + "Status";
-            
-            if (document.getElementById(spanId) == null)
-            {
-              spanElt = document.createElement('span');
-              spanElt.setAttribute("id", spanId);
-              event.target.after(spanElt);
-            }
-            if (patt.test((<HTMLTextAreaElement>event.target).value) || (<HTMLTextAreaElement>event.target).value == "fieldsets")
-            {
-              document.getElementById(spanId).textContent = "Valid";
-              document.getElementById(spanId).style.color = "green";
-            }
-            else {
-              document.getElementById(spanId).textContent = "Invalid, your input must match the pattern : " + patt + ", or be equal to fieldsets";
-              document.getElementById(spanId).style.color = "red";
-            }
-          }
-        }
+        
   };
 
 
@@ -181,7 +207,7 @@ export class AppComponent {
           let i :number =0;
           for (const objectProperty of parent.getProperty('inputs').properties)
           {
-            const idKey : string = "ui/" + i + "/blockIfPattern/key";
+            const idKey : string = "ui/" + i + "/key";
             const child2: FormProperty = objectProperty.properties['name'];
             const child1: FormProperty = parent.getProperty(idKey);
             child1.setValue("inputs."+child2.value, false);
@@ -195,7 +221,6 @@ export class AppComponent {
   open(content)
   {
    this.modalService.open(content);
-   console.log("Submited clicked");
    
    this.value.properties = {
       // task name field
