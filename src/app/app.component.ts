@@ -1,7 +1,9 @@
 import { Component } from '@angular/core';
 import { FormProperty, PropertyGroup } from 'ngx-schema-form';
 import {mySchema} from './WIPP schema.js';
-import {NgbModal, NgbModalConfig} from '@ng-bootstrap/ng-bootstrap';
+import {NgbModal, NgbActiveModal, NgbModalConfig} from '@ng-bootstrap/ng-bootstrap';
+import { isWhileStatement } from 'typescript';
+import { ValueConverter } from '@angular/compiler/src/render3/view/template';
 
 @Component({
   selector: 'app-root',
@@ -217,6 +219,8 @@ export class AppComponent {
       }
     ]
   };
+
+  
 
   open(content)
   {
