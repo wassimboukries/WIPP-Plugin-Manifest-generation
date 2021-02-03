@@ -11,7 +11,8 @@ import { StringWidget } from "ngx-schema-form";
     <label [attr.for]="id" class="horizontal control-label">
         {{ schema.title}}
         </label>
-        <button *ngIf="schema.description" type="button" class="btn btn-outline-secondary mr-2" placement="right" ngbTooltip="{{schema.description}}">
+        <ng-template #tipContent><div *ngIf=schema.description><u>Description</u> : {{this.schema.description}}</div><div *ngIf=schema.examples><u>Examples</u> : {{this.schema.examples}}</div></ng-template>
+        <button *ngIf="schema.description || schema.examples" id="HelpButton" type="button" class="btn btn-outline-info mr-2" placement="right" [ngbTooltip]="tipContent">
     ?
     </button>
         
@@ -37,7 +38,7 @@ export class StringWidgetComponent extends StringWidget  {
     if(this.schema.pattern){
       var inputElt = document.getElementById(this.id);
       var spanElt = document.getElementById(this.id + "Status");
-      console.log(this.schema.default);
+      console.log(this.schema.description);
       inputElt.addEventListener("focus", (event) => inputEvent(event, this.schema));
       inputElt.addEventListener("focusout", function () {
         spanElt.textContent="";

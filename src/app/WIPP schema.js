@@ -196,6 +196,7 @@ export const mySchema = {
                "options":{
                   "$id":"#/properties/inputs/items/properties/options",
                   "type":"object",
+                  "widget":'customObject',
                   "title":"Input options",
                   "visibleIf": {},
                   "properties":{
@@ -434,6 +435,7 @@ export const mySchema = {
          "items":{
             "$id":"#/properties/outputs/items",
             "type":"object",
+            "widget":'customObject',
             "title":"Plugin output",
             "default":null,
             "required":[
@@ -494,6 +496,7 @@ export const mySchema = {
          "items":{
             "type":"object",
             "title":"List of UI definitions",
+            "widget":'customObject',
             "required":[
                "key",
                "title"

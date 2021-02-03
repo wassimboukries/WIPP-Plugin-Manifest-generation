@@ -7,7 +7,8 @@ import {  ArrayWidget } from "ngx-schema-form";
 	<label [attr.for]="id" class="horizontal control-label">
 		{{ schema.title }}
 	</label>
-	<button *ngIf="schema.description" type="button" class="btn btn-outline-secondary mr-2" placement="right" ngbTooltip="{{schema.description}}">
+	<ng-template #tipContent><div *ngIf=schema.description><u>Description</u> : {{this.schema.description}}</div><div *ngIf=schema.examples><u>Examples</u> : {{this.schema.examples}}</div></ng-template>
+        <button *ngIf="schema.description || schema.examples" id="HelpButton" type="button" class="btn btn-outline-info mr-2" placement="right" [ngbTooltip]="tipContent">
     ?
     </button>
 	<div *ngFor="let itemProperty of formProperty.properties">
@@ -19,7 +20,7 @@ import {  ArrayWidget } from "ngx-schema-form";
 			<span class="glyphicon glyphicon-minus" aria-hidden="true">Remove</span> 
 		</button>
 	</div>
-	<button (click)="addItem()" class="btn btn-outline-secondary array-add-button"
+	<button style="margin-top:5px;" (click)="addItem()" class="btn btn-outline-secondary array-add-button"
 		[disabled]="isAddButtonDisabled()"
 		*ngIf="!(schema.hasOwnProperty('minItems') && schema.hasOwnProperty('maxItems') && schema.minItems === schema.maxItems)"
 	>
