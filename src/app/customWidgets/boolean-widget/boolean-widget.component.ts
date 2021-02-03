@@ -11,7 +11,7 @@ import {  CheckboxWidget } from "ngx-schema-form";
           <label class="horizontal control-label">
               <input [formControl]="control" [attr.name]="name" [attr.id]="id" [indeterminate]="control.value !== false && control.value !== true ? true :null" type="checkbox" [disabled]="schema.readOnly">
               <input *ngIf="schema.readOnly" [attr.name]="name" type="hidden" [formControl]="control">
-              <button type="button" class="btn btn-outline-secondary mr-2" placement="right" ngbTooltip="{{schema.description}}">
+              <button *ngIf="schema.description" type="button" class="btn btn-outline-secondary mr-2" placement="right" ngbTooltip="{{schema.description}}">
     ?
     </button>
           </label>

@@ -7,7 +7,7 @@ import {  ArrayWidget } from "ngx-schema-form";
 	<label [attr.for]="id" class="horizontal control-label">
 		{{ schema.title }}
 	</label>
-	<button type="button" class="btn btn-outline-secondary mr-2" placement="right" ngbTooltip="{{schema.description}}">
+	<button *ngIf="schema.description" type="button" class="btn btn-outline-secondary mr-2" placement="right" ngbTooltip="{{schema.description}}">
     ?
     </button>
 	<div *ngFor="let itemProperty of formProperty.properties">
