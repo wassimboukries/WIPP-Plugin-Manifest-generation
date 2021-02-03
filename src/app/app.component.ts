@@ -1,9 +1,8 @@
 import { Component } from '@angular/core';
 import { FormProperty, PropertyGroup } from 'ngx-schema-form';
 import {mySchema} from './WIPP schema.js';
-import {NgbModal, NgbActiveModal, NgbModalConfig} from '@ng-bootstrap/ng-bootstrap';
-import { isWhileStatement } from 'typescript';
-import { ValueConverter } from '@angular/compiler/src/render3/view/template';
+import {NgbModal, NgbModalConfig} from '@ng-bootstrap/ng-bootstrap';
+
 
 @Component({
   selector: 'app-root',
@@ -15,15 +14,15 @@ import { ValueConverter } from '@angular/compiler/src/render3/view/template';
 
 export class AppComponent {
  value: any;
+ Schema = mySchema;
  
  constructor(config: NgbModalConfig, private modalService: NgbModal) {
    config.backdrop = 'static';
    config.keyboard = false;
+   
  }
  
- ngOnInit() // bindings
- {  
-   window.onload = () => {
+ ngAfterViewInit() {
        var btnAdd0 : HTMLElement = document.getElementsByClassName('array-add-button')[0] as HTMLElement;
        var btnAdd2 : HTMLElement = document.getElementsByClassName('array-add-button')[2] as HTMLElement;
        btnAdd0.addEventListener("click", () => {
@@ -36,170 +35,9 @@ export class AppComponent {
             var btnRemove2 : HTMLElement = document.getElementsByClassName('array-remove-button')[0] as HTMLElement;
             btnRemove2.click();
           }
-       });  
-   }
- };
-    
- ngAfterViewInit() // validators
- {
-        var input = document.getElementsByClassName('form-group');
-        var inputElt;
-        var inpout = ["inputs", "outputs"];
-
-        for(let i = 0; i < 10; i++)
-        {
-          inputElt = input[i].getElementsByTagName("input")[0];
-          document.getElementById(inputElt.id).setAttribute("autocomplete", "off");
-          if (inputElt.id == "repository" || inputElt.id == "website") continue;
-          inputElt.addEventListener("input", (event) => inputEventFirstCases(event, this.Schema));
-          inputElt.addEventListener("focusout", function (event) {
-            var spanId; 
-            spanId = event.target.id + "Status";
-            if (document.getElementById(spanId) != null)
-              document.getElementById(spanId).remove();
-          });
-        }
-        
-        for(let i = 0; i < 2; i++)
-        {
-          inputElt = input[10 + i];
-          inputElt.addEventListener("input", (event) => inputEventInputsOutputs(event, this.Schema, i));
-          inputElt.addEventListener("focusout", function (event) {
-            var spanId;
-            if((new RegExp(inpout[i] +'.[0-9]+.name').test(event.target.id)) || (new RegExp(inpout[i] +'.[0-9]+.description').test(event.target.id)))
-            {
-              spanId = inpout[i] + "." + event.target.id.substr(7,1) + ".description" + "Status";
-              if((new RegExp(inpout[i] +'.[0-9]+.name').test(event.target.id))) spanId = inpout[i] + "." + event.target.id.substr(7,1) + ".name" + "Status";
-              if (document.getElementById(spanId) != null)
-                document.getElementById(spanId).remove();
-            }
-          }); 
-        }
-
-        inputElt = input[12];
-        inputElt.addEventListener("input", (event) => inputEventUi(event, this.Schema));
-        inputElt.addEventListener("focusout", function (event) {
-          var spanId;
-          var itemClicked;
-          var quit = 0;
-          if((new RegExp('ui.[0-9]+.key').test(event.target.id)))
-            itemClicked = "key";
-          else if (new RegExp('ui.[0-9]+.title').test(event.target.id))
-            itemClicked = "title";
-          else if (new RegExp('ui.[0-9]+.description').test(event.target.id))
-            itemClicked = "description";
-          else if (new RegExp('ui.[0-9]+.condition').test(event.target.id))
-            itemClicked = "condition";
-          else
-            quit = 1;
-
-          if(!quit)
-          {
-            spanId = "ui." + event.target.id.substr(3,1) + "." + itemClicked + "Status";
-            if (document.getElementById(spanId) != null)
-              document.getElementById(spanId).remove();
-          }
-        });
-
-        function inputEventUi(event, Schema)
-        {
-          var spanElt;
-          var spanId;
-          var patt;
-          var itemClicked;
-          var quit = 0;
-          if((new RegExp('ui.[0-9]+.key').test(event.target.id)))
-            itemClicked = "key";
-          else if (new RegExp('ui.[0-9]+.title').test(event.target.id))
-            itemClicked = "title";
-          else if (new RegExp('ui.[0-9]+.description').test(event.target.id))
-            itemClicked = "description";
-          else if (new RegExp('ui.[0-9]+.condition').test(event.target.id))
-            itemClicked = "condition";
-          else
-            quit = 1;
-            
-          if(!quit)
-          {
-            patt = new RegExp(Schema.properties["ui"]["items"].properties[itemClicked].pattern);
-            spanId = "ui." + event.target.id.substr(3,1) + "." + itemClicked + "Status";
-            
-            if (document.getElementById(spanId) == null)
-            {
-              spanElt = document.createElement('span');
-              spanElt.setAttribute("id", spanId);
-              event.target.after(spanElt);
-            }
-            if (patt.test((<HTMLTextAreaElement>event.target).value) || (<HTMLTextAreaElement>event.target).value == "fieldsets")
-            {
-              document.getElementById(spanId).textContent = "Valid";
-              document.getElementById(spanId).style.color = "green";
-            }
-            else {
-              document.getElementById(spanId).textContent = "Invalid, your input must match the pattern : " + patt;
-              document.getElementById(spanId).style.color = "red";
-            }
-          }
-        }
-
-        function inputEventFirstCases(event, Schema)
-        {
-          var spanElt;
-          var spanId = event.target.id + "Status";
-          var patt = new RegExp(Schema.properties[event.target.id].pattern);
-          if (document.getElementById(spanId) == null)
-          {
-            spanElt = document.createElement('span');
-            spanElt.setAttribute("id", spanId);
-            event.target.after(spanElt);
-          }
-          if (patt.test((<HTMLTextAreaElement>event.target).value))
-          {
-            document.getElementById(spanId).textContent = "Valid";
-            document.getElementById(spanId).style.color = "green";
-          }
-          else {
-            document.getElementById(spanId).textContent = "Invalid, your input must match the pattern : " + patt;
-            document.getElementById(spanId).style.color = "red";
-          }
-        }
-
-        function inputEventInputsOutputs(event, Schema, i)
-        {
-          var spanElt;
-          var spanId;
-          var patt;
-          var clickedTag;
-          if( (new RegExp(inpout[i] +'.[0-9]+.name').test(event.target.id)) || (new RegExp(inpout[i] +'.[0-9]+.description').test(event.target.id)))
-          {
-            clickedTag = "description";
-            if((new RegExp(inpout[i] +'.[0-9]+.name').test(event.target.id))) clickedTag = "name";
-            patt = new RegExp(Schema.properties[inpout[i]]["items"].properties[clickedTag].pattern);
-            spanId = inpout[i] + "." + event.target.id.substr(7,1) + "." + clickedTag + "Status";
-            if (document.getElementById(spanId) == null)
-            {
-              spanElt = document.createElement('span');
-              spanElt.setAttribute("id", spanId);
-              event.target.after(spanElt);
-            }
-            if (patt.test((<HTMLTextAreaElement>event.target).value))
-            {
-              document.getElementById(spanId).textContent = "Valid";
-              document.getElementById(spanId).style.color = "green";
-            }
-            else {
-              document.getElementById(spanId).textContent = "Invalid, your input must match the pattern : " + patt;
-              document.getElementById(spanId).style.color = "red";
-            }
-          }
-        }
-
-        
-  };
-
-
-   Schema = mySchema;
-
+       });
+         
+   };
 
   myFieldBindings = {
     '/inputs': [
@@ -220,7 +58,6 @@ export class AppComponent {
     ]
   };
 
-  
 
   open(content)
   {
