@@ -1,5 +1,5 @@
-import { Component } from "@angular/core";
-import { StringWidget } from "ngx-schema-form";
+import { AfterViewInit, Component } from "@angular/core";
+import { ControlWidget } from "ngx-schema-form";
 
 
 @Component({
@@ -16,7 +16,7 @@ import { StringWidget } from "ngx-schema-form";
     ?
     </button>
         
-    <input [name]="name" [attr.readonly]="(schema.widget.id!=='color') && schema.readOnly?true:null"
+    <input [attr.value]="schema.default" [name]="name" [attr.readonly]="(schema.widget.id!=='color') && schema.readOnly?true:null"
     class="text-widget.id textline-widget form-control"
     [attr.type]="!this.schema.widget.id || this.schema.widget.id === 'string' ? 'text' : this.schema.widget.id"
     [attr.id]="id"  [formControl]="control" [attr.placeholder]="schema.placeholder"
@@ -32,14 +32,14 @@ import { StringWidget } from "ngx-schema-form";
 </ng-template>`
 })
 
-export class StringWidgetComponent extends StringWidget  {
+export class StringWidgetComponent extends ControlWidget implements AfterViewInit{
   ngAfterViewInit()
   {
+    super.ngAfterViewInit();
     if(this.schema.pattern){
       var inputElt = document.getElementById(this.id);
       var spanElt = document.getElementById(this.id + "Status");
-      console.log(this.schema.description);
-      inputElt.addEventListener("focus", (event) => inputEvent(event, this.schema));
+      inputElt.addEventListener("input", (event) => inputEvent(event, this.schema));
       inputElt.addEventListener("focusout", function () {
         spanElt.textContent="";
       });

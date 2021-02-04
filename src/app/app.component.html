@@ -7,7 +7,7 @@
     </div>
 
     <div class="modal-body">
-        <sf-form [schema]="value" [bindings]="value.fieldBindings[sourceField]"></sf-form>
+        <sf-form [schema]="manifest" [bindings]="manifest.fieldBindings[sourceField]"></sf-form>
     </div>
     
     <div class="modal-footer">
@@ -18,12 +18,12 @@
 <div class="container-fluid">
     <div class="row page">
         <div class="col-md-5">
-            <sf-form [schema]="Schema" (onChange)="value=$event.value" [bindings]="myFieldBindings"></sf-form>
+            <sf-form [schema]="Schema" (onChange)="manifest=$event.value" [bindings]="myFieldBindings"></sf-form>
         </div>
 
         <div class="col-md- manifest">
             <h3>Manifest:</h3>
-            <pre>{{value | json : 4}}</pre>
+            <pre>{{manifest | json}}</pre>
             <button type="button" class="btn btn-outline-primary" (click)="open(content)">Render</button>
         </div>
     </div>

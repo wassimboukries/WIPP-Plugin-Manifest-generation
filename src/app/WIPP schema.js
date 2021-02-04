@@ -25,7 +25,7 @@ export const mySchema = {
          ],
          "minLength":1,
          "pattern":"^(.*)$",
-         "widget":'customString'
+         "widget":"customString"
       },
       "version":{
          "$id":"#/properties/version",
@@ -37,7 +37,7 @@ export const mySchema = {
          ],
          "minLength":1,
          "pattern":"^(.*)$",
-         "widget":'customString'
+         "widget":"customString"
       },
       "title":{
          "$id":"#/properties/title",
@@ -49,7 +49,7 @@ export const mySchema = {
          ],
          "minLength":1,
          "pattern":"^(.*)$",
-         "widget":'customString'
+         "widget":"customString"
       },
       "description":{
          "$id":"#/properties/description",
@@ -61,7 +61,7 @@ export const mySchema = {
          ],
          "minLength":1,
          "pattern":"^(.*)$",
-         "widget":'customString'
+         "widget":"customString"
       },
       "author":{
          "$id":"#/properties/author",
@@ -72,7 +72,7 @@ export const mySchema = {
             "FirstName LastName"
          ],
          "pattern":"^(.*)$",
-         "widget":'customString'
+         "widget":"customString"
       },
       "institution":{
          "$id":"#/properties/institution",
@@ -83,7 +83,7 @@ export const mySchema = {
             "National Institute of Standards and Technology"
          ],
          "pattern":"^(.*)$",
-         "widget":'customString'
+         "widget":"customString"
       },
       "repository":{
          "$id":"#/properties/repository",
@@ -94,7 +94,7 @@ export const mySchema = {
             "https://github.com/usnistgov/WIPP"
          ],
          "format":"uri",
-         "widget":'customString'
+         "widget":"customString"
       },
       "website":{
          "$id":"#/properties/website",
@@ -105,7 +105,7 @@ export const mySchema = {
             "http://usnistgov.github.io/WIPP"
          ],
          "format":"uri",
-         "widget":'customString'
+         "widget":"customString"
       },
       "citation":{
          "$id":"#/properties/citation",
@@ -116,14 +116,14 @@ export const mySchema = {
             "Peter Bajcsy, Joe Chalfoun, and Mylene Simon (2018). Web Microanalysis of Big Image Data. Springer-Verlag International"
          ],
          "pattern":"^(.*)$",
-         "widget":'customString'
+         "widget":"customString"
       },
       "containerId":{
          "$id":"#/properties/containerId",
          "type":"string",
          "title":"ContainerId",
          "description":"Docker image ID",
-         "widget":'customString',
+         "widget":"customString",
          "default":"",
          "examples":[
             "wipp/example-plugin:1.0.0"
@@ -133,7 +133,7 @@ export const mySchema = {
       "inputs":{
          "$id":"#/properties/inputs",
          "type":"array",
-         "widget":'customArray',
+         "widget":"customArray",
          "title":"List of Inputs",
          "description":"Defines inputs to the plugin",
          "default":null,
@@ -141,7 +141,7 @@ export const mySchema = {
          "items":{
             "$id":"#/properties/inputs/items",
             "type":"object",
-            "widget":'customObject',
+            "widget":"customObject",
             "title":"Input",
             "description":"Plugin input",
             "default":null,
@@ -157,7 +157,7 @@ export const mySchema = {
                   "title":"Input name",
                   "description":"Input name as expected by the plugin CLI",
                   "default":"",
-                  "widget":'customString',
+                  "widget":"customString",
                   "examples":[
                      "inputImages",
                      "fileNamePattern",
@@ -193,213 +193,220 @@ export const mySchema = {
                   ],
                   "required":true
                },
-               "options":{
-                  "$id":"#/properties/inputs/items/properties/options",
+               "enumOptions":{
+                  "$id":"#/properties/inputs/items/properties/enumOptions",
                   "type":"object",
-                  "widget":'customObject',
+                  "widget":"customObject",
                   "title":"Input options",
-                  "visibleIf": {},
+                  "visibleIf":{
+                     "type":[
+                        "enum"
+                     ]
+                  },
                   "properties":{
                      "values":{
                         "type":"array",
                         "description":"List of possible values",
-                        "widget":'customArray',
+                        "widget":"customArray",
                         "items":{
                            "type":"string"
                         },
                         "uniqueItems":true
-                     },
+                     }
+                  }
+               },
+               "arrayOptions":{
+                  "$id":"#/properties/inputs/items/properties/arrayOptions",
+                  "type":"object",
+                  "widget":"customObject",
+                  "title":"List of array items",
+                  "description":"Possible values for the input array",
+                  "default":{
                      
-                     "items":{
-                        "$id":"#/properties/inputs/items/properties/options/properties/items",
-                        "type":"object",
-                        "widget":'customObject',
-                        "title":"List of array items",
-                        "description":"Possible values for the input array",
-                        "default":{
-                           
-                        },
-                    
-                        "required":[
-                           "type",
-                           "title",
-                           "oneOf",
-                           "default",
-                           "widget",
-                           "minItems",
-                           "uniqueItems"
+                  },
+                  "visibleIf":{
+                     "type":[
+                        "array"
+                     ]
+                  },
+                  "required":[
+                     "type",
+                     "title",
+                     "oneOf",
+                     "default",
+                     "widget",
+                     "minItems",
+                     "uniqueItems"
+                  ],
+                  "properties":{
+                     "type":{
+                        "$id":"#/properties/inputs/items/properties/arrayOptions/properties/type",
+                        "type":"string",
+                        "widget":"customString",
+                        "title":"Items type",
+                        "description":"Type of the items to be selected",
+                        "enum":[
+                           "string"
                         ],
-                        "properties":{
-                           "type":{
-                              "$id":"#/properties/inputs/items/properties/options/properties/items/properties/type",
-                              "type":"string",
-                              "widget":'customString',
-                              "title":"Items type",
-                              "description":"Type of the items to be selected",
-                              "enum":[
-                                 "string"
-                              ],
-                              "examples":[
-                                 "string"
-                              ]
+                        "examples":[
+                           "string"
+                        ]
+                     },
+                     "title":{
+                        "$id":"#/properties/inputs/items/properties/arrayOptions/properties/title",
+                        "type":"string",
+                        "widget":"customString",
+                        "title":"Selection title",
+                        "description":"Title of the item selection section in the form",
+                        "default":"",
+                        "examples":[
+                           "Select feature"
+                        ]
+                     },
+                     "oneOf":{
+                        "$id":"#/properties/inputs/items/properties/arrayOptions/properties/oneOf",
+                        "type":"array",
+                        "widget":"customArray",
+                        "title":"Possible items",
+                        "description":"List of possible items",
+                        "default":[
+                           
+                        ],
+                        "items":{
+                           "$id":"#/properties/inputs/items/properties/arrayOptions/properties/oneOf/items",
+                           "type":"object",
+                           "widget":"customObject",
+                           "title":"Items definition",
+                           "description":"Description of the possible items",
+                           "default":{
+                              
                            },
-                           "title":{
-                              "$id":"#/properties/inputs/items/properties/options/properties/items/properties/title",
-                              "type":"string",
-                              "widget":'customString',
-                              "title":"Selection title",
-                              "description":"Title of the item selection section in the form",
-                              "default":"",
-                              "examples":[
-                                 "Select feature"
-                              ]
-                           },
-                           "oneOf":{
-                              "$id":"#/properties/inputs/items/properties/options/properties/items/properties/oneOf",
-                              "type":"array",
-                              "widget":'customArray',
-                              "title":"Possible items",
-                              "description":"List of possible items",
-                              "default":[
-                                 
-                              ],
-                              "items":{
-                                 "$id":"#/properties/inputs/items/properties/options/properties/items/properties/oneOf/items",
-                                 "type":"object",
-                                 "widget":'customObject',
-                                 "title":"Items definition",
-                                 "description":"Description of the possible items",
-                                 "default":{
-                                    
-                                 },
-                                 "required":[
-                                    "description",
-                                    "enum"
-                                 ],
-                                 "properties":{
-                                    "description":{
-                                       "$id":"#/properties/inputs/items/properties/options/properties/items/properties/oneOf/items/properties/description",
-                                       "type":"string",
-                                       "widget":'customString',
-                                       "title":"Description",
-                                       "description":"Description of the value that will appear in the form",
-                                       "default":"",
-                                       "examples":[
-                                          "Area"
-                                       ]
-                                    },
-                                    "enum":{
-                                       "$id":"#/properties/inputs/items/properties/options/properties/items/properties/oneOf/items/properties/enum",
-                                       "type":"array",
-                                       "widget":'customArray',
-                                       "title":"Value",
-                                       "description":"Values of the selected item",
-                                       "default":[
-                                          
-                                       ],
-                                       "items":{
-                                          "$id":"#/properties/inputs/items/properties/options/properties/items/properties/oneOf/items/properties/enum/items",
-                                          "type":"string",
-                                          "widget":'customString',
-                                          "title":"List of values",
-                                          "description":"List of values associated with the selected item (usually one value)",
-                                          "default":"",
-                                          "examples":[
-                                             "Feature2DJava_Area"
-                                          ]
-                                       }
-                                    }
-                                 },
+                           "required":[
+                              "description",
+                              "enum"
+                           ],
+                           "properties":{
+                              "description":{
+                                 "$id":"#/properties/inputs/items/properties/arrayOptions/properties/oneOf/items/properties/description",
+                                 "type":"string",
+                                 "widget":"customString",
+                                 "title":"Description",
+                                 "description":"Description of the value that will appear in the form",
+                                 "default":"",
                                  "examples":[
-                                    {
-                                       "description":"Area",
-                                       "enum":[
-                                          "Feature2DJava_Area"
-                                       ]
-                                    },
-                                    {
-                                       "enum":[
-                                          "Feature2DJava_Mean"
-                                       ],
-                                       "description":"Mean"
-                                    }
+                                    "Area"
                                  ]
+                              },
+                              "enum":{
+                                 "$id":"#/properties/inputs/items/properties/arrayOptions/properties/oneOf/items/properties/enum",
+                                 "type":"array",
+                                 "widget":"customArray",
+                                 "title":"Value",
+                                 "description":"Values of the selected item",
+                                 "default":[
+                                    
+                                 ],
+                                 "items":{
+                                    "$id":"#/properties/inputs/items/properties/arrayOptions/properties/oneOf/items/properties/enum/items",
+                                    "type":"string",
+                                    "widget":"customString",
+                                    "title":"List of values",
+                                    "description":"List of values associated with the selected item (usually one value)",
+                                    "default":"",
+                                    "examples":[
+                                       "Feature2DJava_Area"
+                                    ]
+                                 }
                               }
                            },
-                           "default":{
-                              "$id":"#/properties/inputs/items/properties/options/properties/items/properties/default",
-                              "type":"string",
-                              "widget":'customString',
-                              "title":"Default value",
-                              "description":"Value selected by default (must be one of the possible values)",
-                              "default":"",
-                              "examples":[
+                           "examples":[
+                              {
+                                 "description":"Area",
+                                 "enum":[
+                                    "Feature2DJava_Area"
+                                 ]
+                              },
+                              {
+                                 "enum":[
+                                    "Feature2DJava_Mean"
+                                 ],
+                                 "description":"Mean"
+                              }
+                           ]
+                        }
+                     },
+                     "default":{
+                        "$id":"#/properties/inputs/items/properties/arrayOptions/properties/default",
+                        "type":"string",
+                        "widget":"customString",
+                        "title":"Default value",
+                        "description":"Value selected by default (must be one of the possible values)",
+                        "default":"",
+                        "examples":[
+                           "Feature2DJava_Area"
+                        ]
+                     },
+                     "widget":{
+                        "$id":"#/properties/inputs/items/properties/arrayOptions/properties/widget",
+                        "type":"string",
+                        "widget":"customString",
+                        "title":"Item selection widget",
+                        "description":"How items can be selected (select -> dropdown list with add/remove buttons, checkbox -> multi-selection from list)",
+                        "enum":[
+                           "select",
+                           "checkbox"
+                        ],
+                        "examples":[
+                           "select"
+                        ]
+                     },
+                     "minItems":{
+                        "$id":"#/properties/inputs/items/properties/arrayOptions/properties/minItems",
+                        "type":"integer",
+                        "widget":"customInteger",
+                        "title":"Minumum number of items",
+                        "description":"Minumum number of items",
+                        "default":0,
+                        "examples":[
+                           1
+                        ]
+                     },
+                     "uniqueItems":{
+                        "$id":"#/properties/inputs/items/properties/arrayOptions/properties/uniqueItems",
+                        "type":"string",
+                        "widget":"customString",
+                        "title":"Uniqueness of the items",
+                        "description":"Whether items in the array have to be unique",
+                        "examples":[
+                           "true",
+                           true
+                        ]
+                     }
+                  },
+                  "examples":[
+                     {
+                        "type":"string",
+                        "widget":"select",
+                        "uniqueItems":"true",
+                        "default":"Feature2DJava_Area",
+                        "minItems":1,
+                        "title":"Select feature",
+                        "oneOf":[
+                           {
+                              "description":"Area",
+                              "enum":[
                                  "Feature2DJava_Area"
                               ]
                            },
-                           "widget":{
-                              "$id":"#/properties/inputs/items/properties/options/properties/items/properties/widget",
-                              "type":"string",
-                              "widget":'customString',
-                              "title":"Item selection widget",
-                              "description":"How items can be selected (select -> dropdown list with add/remove buttons, checkbox -> multi-selection from list)",
-                              "enum":[
-                                 "select",
-                                 "checkbox"
-                              ],
-                              "examples":[
-                                 "select"
-                              ]
-                           },
-                           "minItems":{
-                              "$id":"#/properties/inputs/items/properties/options/properties/items/properties/minItems",
-                              "type":"integer",
-                              "widget":'customInteger',
-                              "title":"Minumum number of items",
-                              "description":"Minumum number of items",
-                              "default":0,
-                              "examples":[
-                                 1
-                              ]
-                           },
-                           "uniqueItems":{
-                              "$id":"#/properties/inputs/items/properties/options/properties/items/properties/uniqueItems",
-                              "type":"string",
-                              "widget":'customString',
-                              "title":"Uniqueness of the items",
-                              "description":"Whether items in the array have to be unique",
-                              "examples":[
-                                 "true",
-                                 true
-                              ]
-                           }
-                        },
-                        "examples":[
                            {
-                              "type":"string",
-                              "widget":"select",
-                              "uniqueItems":"true",
-                              "default":"Feature2DJava_Area",
-                              "minItems":1,
-                              "title":"Select feature",
-                              "oneOf":[
-                                 {
-                                    "description":"Area",
-                                    "enum":[
-                                       "Feature2DJava_Area"
-                                    ]
-                                 },
-                                 {
-                                    "description":"Mean",
-                                    "enum":[
-                                       "Feature2DJava_Mean"
-                                    ]
-                                 }
+                              "description":"Mean",
+                              "enum":[
+                                 "Feature2DJava_Mean"
                               ]
                            }
                         ]
                      }
-                  }
+                  ]
                },
                "description":{
                   "$id":"#/properties/inputs/items/properties/description",
@@ -409,12 +416,12 @@ export const mySchema = {
                      "Input Images"
                   ],
                   "pattern":"^(.*)$",
-                  "widget":'customString'
+                  "widget":"customString"
                },
                "required":{
                   "$id":"#/properties/inputs/items/properties/required",
                   "type":"boolean",
-                  "widget":'customBoolean',
+                  "widget":"customBoolean",
                   "title":"Required input",
                   "description":"Whether an input is required or not",
                   "default":true,
@@ -428,14 +435,14 @@ export const mySchema = {
       "outputs":{
          "$id":"#/properties/outputs",
          "type":"array",
-         "widget":'customArray',
+         "widget":"customArray",
          "title":"List of Outputs",
          "description":"Defines the outputs of the plugin",
          "default":null,
          "items":{
             "$id":"#/properties/outputs/items",
             "type":"object",
-            "widget":'customObject',
+            "widget":"customObject",
             "title":"Plugin output",
             "default":null,
             "required":[
@@ -453,7 +460,7 @@ export const mySchema = {
                      "outputCollection"
                   ],
                   "pattern":"^[a-zA-Z0-9][-a-zA-Z0-9]*$",
-                  "widget":'customString'
+                  "widget":"customString"
                },
                "type":{
                   "$id":"#/properties/outputs/items/properties/type",
@@ -483,7 +490,7 @@ export const mySchema = {
                      "Output collection"
                   ],
                   "pattern":"^(.*)$",
-                  "widget":'customString'
+                  "widget":"customString"
                }
             }
          }
@@ -491,12 +498,12 @@ export const mySchema = {
       "ui":{
          "$id":"#/properties/ui",
          "type":"array",
-         "widget":'customArray',
+         "widget":"customArray",
          "title":"Plugin form UI definition",
          "items":{
             "type":"object",
             "title":"List of UI definitions",
-            "widget":'customObject',
+            "widget":"customObject",
             "required":[
                "key",
                "title"
@@ -506,13 +513,14 @@ export const mySchema = {
                   "$id":"#/properties/ui/items/properties/key",
                   "type":"string",
                   "title":"UI key",
-                  "widget":'customString',
+                  "widget":"customString",
                   "description":"Key of the input which this UI definition applies to, the expected format is 'inputs.inputName'. Special keyword 'fieldsets' can be used to define arrangement of inputs by sections.",
                   "examples":[
                      "inputs.inputImages",
                      "inputs.fileNamPattern",
                      "fieldsets"
                   ],
+                  "readOnly":true,
                   "pattern":"^inputs\\.[a-zA-Z0-9][-a-zA-Z0-9]*$"
                },
                "title":{
@@ -524,7 +532,7 @@ export const mySchema = {
                      "Input images: "
                   ],
                   "pattern":"^(.*)$",
-                  "widget":'customString'
+                  "widget":"customString"
                },
                "description":{
                   "$id":"#/properties/ui/items/properties/description",
@@ -535,12 +543,12 @@ export const mySchema = {
                      "Pick a collection..."
                   ],
                   "pattern":"^(.*)$",
-                  "widget":'customString'
+                  "widget":"customString"
                },
                "condition":{
                   "$id":"#/properties/ui/items/properties/condition",
                   "type":"string",
-                  "widget":'customString',
+                  "widget":"customString",
                   "title":"Input visibility condition",
                   "description":"Definition of when this field is visible or not, depending on the value of another input, the expected format for the condition is 'model.inputs.inputName==value'",
                   "default":"",
@@ -559,20 +567,19 @@ export const mySchema = {
                      false,
                      ".ome.tif"
                   ],
-                  "widget":'customString'
+                  "widget":"customString"
                },
                "hidden":{
                   "$id":"#/properties/ui/items/properties/hidden",
                   "type":"boolean",
-                  "widget":'customBoolean',
+                  "widget":"customBoolean",
                   "title":"Hidden input",
                   "description":"Hidden input will not be displayed on the form, but can be used in conjunction with the 'default' or 'bind' properties to define default or automatically set parameters",
                   "default":false,
                   "examples":[
                      true,
                      false
-                  ],
-                  "widget":'customString'
+                  ]
                },
                "bind":{
                   "$id":"#/properties/ui/items/properties/bind",
@@ -581,11 +588,12 @@ export const mySchema = {
                   "examples":[
                      "gridWidth"
                   ],
-                  "widget":'customString'
+                  "widget":"customString"
                }
             }
          }
       }
    }
-}
+};
+
 

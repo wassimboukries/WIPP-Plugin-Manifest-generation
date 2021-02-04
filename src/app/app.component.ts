@@ -13,7 +13,7 @@ import {NgbModal, NgbModalConfig} from '@ng-bootstrap/ng-bootstrap';
 
 
 export class AppComponent {
- value: any;
+ manifest: any;
  Schema = mySchema;
  
  constructor(config: NgbModalConfig, private modalService: NgbModal) {
@@ -23,34 +23,42 @@ export class AppComponent {
  }
  
  ngAfterViewInit() {
-       var btnAdd0 : HTMLElement = document.getElementsByClassName('array-add-button')[0] as HTMLElement;
-       var btnAdd2 : HTMLElement = document.getElementsByClassName('array-add-button')[2] as HTMLElement;
-       btnAdd0.addEventListener("click", () => {
-         btnAdd2.click();
+       var btnAddInput = document.getElementById('addInputButton');
+       var btnAddUi = document.getElementById('addUiButton');
+
+       btnAddInput.addEventListener("click", () => {
+        btnAddUi.click();
        });
-       
+
        document.querySelector('body').addEventListener('click', event => {
-         var targett = event.target as HTMLElement;
-         if (targett.matches('.array-remove-button')){
-            var btnRemove2 : HTMLElement = document.getElementsByClassName('array-remove-button')[0] as HTMLElement;
-            btnRemove2.click();
-          }
-       });
+        var targett = event.target as HTMLElement;
+        if (targett.matches('.array-remove-button')){
+           var btnRemove2 : HTMLElement = document.getElementsByClassName('array-remove-button')[0] as HTMLElement;
+           btnRemove2.click();
+         }
+      });
+
+       //var btnRemoveInput = document.getElementById('removeInputButton');
+       //var btnRemoveUi = document.getElementById('removeUiButton');
+       
+       /*btnRemoveInput.addEventListener("click", () => {
+        btnRemoveUi.click();
+       });*/
          
    };
 
-  myFieldBindings = {
+   myFieldBindings = {
     '/inputs': [
       {
         'input': (event, formProperty: FormProperty) => {
           const parent: PropertyGroup = formProperty.findRoot();
-          let i :number =0;
+          let i :number = 0;
           for (const objectProperty of parent.getProperty('inputs').properties)
           {
             const idKey : string = "ui/" + i + "/key";
-            const child2: FormProperty = objectProperty.properties['name'];
-            const child1: FormProperty = parent.getProperty(idKey);
-            child1.setValue("inputs."+child2.value, false);
+            const child1: FormProperty = objectProperty.properties['name'];
+            const child2: FormProperty = parent.getProperty(idKey);
+            child2.setValue("inputs."+child1.value, false);
             ++i;
           }
         } 
@@ -63,7 +71,7 @@ export class AppComponent {
   {
    this.modalService.open(content);
    
-   this.value.properties = {
+   this.manifest.properties = {
       // task name field
       'taskName': {
         'type': 'string',
@@ -82,16 +90,17 @@ export class AppComponent {
     };
   
     try {
+      console.log(this.manifest.name);
       // default field bindings - none
-      this.value.fieldBindings = {};
+      this.manifest.fieldBindings = {};
       // TODO: validation of manifest ui description
-      this.value.inputs.forEach(input => {
+      this.manifest.inputs.forEach(input => {
         const inputSchema = {};
         // common properties
         inputSchema['key'] = 'inputs.' + input.name;
         // inputSchema['description'] = input.description;
         if (input.required) {
-          this.value.properties.inputs.required.push(input.name);
+          this.manifest.properties.inputs.required.push(input.name);
         }
         // type-specific properties
   
@@ -112,18 +121,18 @@ export class AppComponent {
             inputSchema['type'] = 'string';
             inputSchema['widget'] = 'select';
             inputSchema['oneOf'] = [];
-            input.options.values.forEach(value => {
+            input.enumOptions.values.forEach(value => {
               inputSchema['oneOf'].push({
                 'enum': [value],
                 'description': value
               });
             });
-            inputSchema['default'] = input.options.values[0];
+            inputSchema['default'] = input.enumOptions.values[0];
             break;
           case 'array':
             inputSchema['type'] = 'array';
             inputSchema['format'] = 'array';
-            inputSchema['items'] = input.options.items;
+            inputSchema['items'] = input.arrayOptions;
             break;
           // Workaround for https://github.com/guillotinaweb/ngx-schema-form/issues/332
           case 'number':
@@ -135,7 +144,7 @@ export class AppComponent {
             inputSchema['type'] = input.type;
         }
         // ui properties
-        const ui = this.value.ui.find(v => v.key === inputSchema['key']);
+        const ui = this.manifest.ui.find(v => v.key === inputSchema['key']);
         if (ui.hasOwnProperty('title')) {
           inputSchema['title'] = ui.title;
         }
@@ -161,7 +170,7 @@ export class AppComponent {
         if (ui.hasOwnProperty('bind')) {
           const sourceField = '/inputs/' + ui.bind;
           const targetField = ui['key'].split('.').join('/');
-          this.value.fieldBindings[sourceField] = [
+          this.manifest.fieldBindings[sourceField] = [
             {
               'input': (event, formProperty: FormProperty) => {
                 const parent: PropertyGroup = formProperty.findRoot();
@@ -175,18 +184,18 @@ export class AppComponent {
         if (ui.hasOwnProperty('default')) {
           inputSchema['default'] = ui.default;
         }
-        this.value.properties.inputs.properties[input.name] = inputSchema;
+        this.manifest.properties.inputs.properties[input.name] = inputSchema;
       });
       // field sets - arrange fields by groups
-      const fieldsetsList = this.value.ui.find(v => v.key === 'fieldsets');
+      const fieldsetsList = this.manifest.ui.find(v => v.key === 'fieldsets');
       if (fieldsetsList) {
-        this.value.properties.inputs.fieldsets = fieldsetsList.fieldsets;
+        this.manifest.properties.inputs.fieldsets = fieldsetsList.fieldsets;
       }
-      this.value.isSchemaValid = true;
+      this.manifest.isSchemaValid = true;
     } catch (error) {
       console.log(error);
-      this.value.properties = {};
-      this.value.isSchemaValid = false;
+      this.manifest.properties = {};
+      this.manifest.isSchemaValid = false;
     }
   }
 }
