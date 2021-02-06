@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ElementRef, Input, ViewChild } from '@angular/core';
 import { FormProperty, PropertyGroup } from 'ngx-schema-form';
 import {mySchema} from './WIPP schema.js';
 import {NgbModal, NgbModalConfig} from '@ng-bootstrap/ng-bootstrap';
@@ -15,6 +15,8 @@ import {NgbModal, NgbModalConfig} from '@ng-bootstrap/ng-bootstrap';
 export class AppComponent {
  manifest: any;
  Schema = mySchema;
+
+ @ViewChild('content') contentInTs: ElementRef;
  
  constructor(config: NgbModalConfig, private modalService: NgbModal) {
    config.backdrop = 'static';
@@ -44,21 +46,29 @@ export class AppComponent {
        /*btnRemoveInput.addEventListener("click", () => {
         btnRemoveUi.click();
        });*/
+       
          
-   };
+    };
+
+    isFormValid()
+    {
+      return document.getElementsByTagName('form')[0].checkValidity();
+    }
+
+   
 
    myFieldBindings = {
     '/inputs': [
       {
         'input': (event, formProperty: FormProperty) => {
           const parent: PropertyGroup = formProperty.findRoot();
-          let i :number = 0;
+          let i: number = 0;
           for (const objectProperty of parent.getProperty('inputs').properties)
           {
             const idKey : string = "ui/" + i + "/key";
             const child1: FormProperty = objectProperty.properties['name'];
             const child2: FormProperty = parent.getProperty(idKey);
-            child2.setValue("inputs."+child1.value, false);
+            child2.setValue("inputs." + child1.value, false);
             ++i;
           }
         } 
@@ -69,6 +79,7 @@ export class AppComponent {
 
   open(content)
   {
+    console.log("hnaaaaaaaaaa");
    this.modalService.open(content);
    
    this.manifest.properties = {
@@ -90,7 +101,6 @@ export class AppComponent {
     };
   
     try {
-      console.log(this.manifest.name);
       // default field bindings - none
       this.manifest.fieldBindings = {};
       // TODO: validation of manifest ui description

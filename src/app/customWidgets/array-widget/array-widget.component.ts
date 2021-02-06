@@ -4,9 +4,9 @@ import {  ArrayWidget } from "ngx-schema-form";
 @Component({
   selector: "sf-array-widget",
   template: `<div class="widget form-group">
-	<label [attr.for]="id" class="horizontal control-label">
+	<h4 [attr.for]="id" class="horizontal control-label">
 		{{ schema.title }}
-	</label>
+	</h4>
 	<ng-template #tipContent><div *ngIf=schema.description><u>Description</u> : {{this.schema.description}}</div><div *ngIf=schema.examples><u>Examples</u> : {{this.schema.examples}}</div></ng-template>
         <button *ngIf="schema.description || schema.examples" id="HelpButton" type="button" class="btn btn-outline-info mr-2" placement="right" [ngbTooltip]="tipContent">
     ?
