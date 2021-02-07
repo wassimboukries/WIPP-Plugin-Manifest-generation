@@ -1,8 +1,3 @@
 .fade {
-    opacity: 100 !important;
-}
-
-.manifest {
-    position: fixed;
-    left: 45%;
+  opacity: 100 !important;
 }

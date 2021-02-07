@@ -2,30 +2,29 @@
     <div class="modal-header">
         <h3 class="modal-title" id="modal-basic-title">Manifest</h3>
         <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
-        <span aria-hidden="true">&times;</span>
-      </button>
+            <span aria-hidden="true">&times;</span>
+        </button>
     </div>
+
     <div class="modal-body">
-        <sf-form [schema]="value" [bindings]="value.fieldBindings"></sf-form>
+        <sf-form [schema]="manifest" [bindings]="manifest.fieldBindings[sourceField]"></sf-form>
     </div>
+
     <div class="modal-footer">
-        <button type="button" class="btn btn-outline-dark" (click)="c('Save click')">Download</button>
+        <button type="button" class="btn btn-outline-dark" (click)="c('Close click')">Close</button>
     </div>
 </ng-template>
 
 <div class="container-fluid">
     <div class="row page">
         <div class="col-md-5">
-            <sf-form [schema]="Schema" (onChange)="value=$event.value" [bindings]="myFieldBindings"></sf-form>
+            <sf-form [schema]="Schema" (onChange)="manifest=$event.value" [bindings]="myFieldBindings"></sf-form>
         </div>
 
         <div class="col-md- manifest">
             <h3>Manifest:</h3>
-            <pre>{{value | json : 4}}</pre>
-            <button type="button" class="btn btn-lg btn-outline-primary" (click)="open(content)">Submit</button>
-
-
-
+            <pre>{{manifest | json}}</pre>
+            <button [disabled]="isFormValid() == false" type="button" class="btn btn-outline-primary" (click)="open(content)">Render</button>
         </div>
     </div>
 </div>

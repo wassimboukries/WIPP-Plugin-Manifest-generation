@@ -1,10 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, ElementRef, Input, ViewChild } from '@angular/core';
 import { FormProperty, PropertyGroup } from 'ngx-schema-form';
-import { ButtonComponent } from 'ngx-schema-form/lib/template-schema/button/button.component';
 import {mySchema} from './WIPP schema.js';
-import {NgbModal, NgbActiveModal, NgbModalConfig} from '@ng-bootstrap/ng-bootstrap';
-import { isWhileStatement } from 'typescript';
-import { ValueConverter } from '@angular/compiler/src/render3/view/template';
+import {NgbModal, NgbModalConfig} from '@ng-bootstrap/ng-bootstrap';
+
 
 @Component({
   selector: 'app-root',
@@ -15,177 +13,62 @@ import { ValueConverter } from '@angular/compiler/src/render3/view/template';
 
 
 export class AppComponent {
- value: any;
+ manifest: any;
+ Schema = mySchema;
+
+ @ViewChild('content') contentInTs: ElementRef;
  
  constructor(config: NgbModalConfig, private modalService: NgbModal) {
    config.backdrop = 'static';
    config.keyboard = false;
+   
  }
  
- ngOnInit() // bindings
- {  
-   window.onload = () => {
-       var btnAdd0 : HTMLElement = document.getElementsByClassName('array-add-button')[0] as HTMLElement;
-       var btnAdd2 : HTMLElement = document.getElementsByClassName('array-add-button')[2] as HTMLElement;
-       btnAdd0.addEventListener("click", () => {
-         btnAdd2.click();
+ ngAfterViewInit() {
+       var btnAddInput = document.getElementById('addInputButton');
+       var btnAddUi = document.getElementById('addUiButton');
+
+       btnAddInput.addEventListener("click", () => {
+        btnAddUi.click();
        });
-       
+
        document.querySelector('body').addEventListener('click', event => {
-         var targett = event.target as HTMLElement;
-         if (targett.matches('.array-remove-button')){
-            var btnRemove2 : HTMLElement = document.getElementsByClassName('array-remove-button')[0] as HTMLElement;
-            btnRemove2.click();
-          }
-       });  
-   }
- };
-    
- ngAfterViewInit() // validators
- {
-        var input = document.getElementsByClassName('form-group');
-        var inputElt;
-        var inpout = ["inputs", "outputs"];
+        var targett = event.target as HTMLElement;
+        if (targett.matches('.array-remove-button')){
+           var btnRemove2 : HTMLElement = document.getElementsByClassName('array-remove-button')[0] as HTMLElement;
+           btnRemove2.click();
+         }
+      });
 
-        for(let i = 0; i < 10; i++)
-        {
-          inputElt = input[i].getElementsByTagName("input")[0];
-          document.getElementById(inputElt.id).setAttribute("autocomplete", "off");
-          if (inputElt.id == "repository" || inputElt.id == "website") continue;
-          inputElt.addEventListener("input", (event) => inputEventFirstCases(event, this.Schema));
-          inputElt.addEventListener("focusout", function (event) {
-            var spanId; 
-            spanId = event.target.id + "Status";
-            if (document.getElementById(spanId) != null)
-              document.getElementById(spanId).remove();
-          });
-        }
-        
-        for(let i = 0; i < 2; i++)
-        {
-          inputElt = input[10 + i];
-          inputElt.addEventListener("input", (event) => inputEventInputsOutputs(event, this.Schema, i));
-          inputElt.addEventListener("focusout", function (event) {
-            var spanId;
-            if((new RegExp(inpout[i] +'.[0-9]+.name').test(event.target.id)) || (new RegExp(inpout[i] +'.[0-9]+.description').test(event.target.id)))
-            {
-              spanId = inpout[i] + "." + event.target.id.substr(7,1) + ".description" + "Status";
-              if((new RegExp(inpout[i] +'.[0-9]+.name').test(event.target.id))) spanId = inpout[i] + "." + event.target.id.substr(7,1) + ".name" + "Status";
-              if (document.getElementById(spanId) != null)
-                document.getElementById(spanId).remove();
-            }
-          }); 
-        }
+       //var btnRemoveInput = document.getElementById('removeInputButton');
+       //var btnRemoveUi = document.getElementById('removeUiButton');
+       
+       /*btnRemoveInput.addEventListener("click", () => {
+        btnRemoveUi.click();
+       });*/
+       
+         
+    };
 
-        inputElt = input[12];
-        inputElt.addEventListener("input", (event) => inputEventUi(event, this.Schema));
-        inputElt.addEventListener("focusout", function (event) {
-          var spanId;
-          if((new RegExp('ui.[0-9]+.key').test(event.target.id)))
-          {
-            spanId = "ui." + event.target.id.substr(3,1) + "." + "key" + "Status";
-            if (document.getElementById(spanId) != null)
-              document.getElementById(spanId).remove();
-          }
-        });
+    isFormValid()
+    {
+      return document.getElementsByTagName('form')[0].checkValidity();
+    }
 
-        function inputEventFirstCases(event, Schema)
-        {
-          var spanElt;
-          var spanId = event.target.id + "Status";
-          var patt = new RegExp(Schema.properties[event.target.id].pattern);
-          if (document.getElementById(spanId) == null)
-          {
-            spanElt = document.createElement('span');
-            spanElt.setAttribute("id", spanId);
-            event.target.after(spanElt);
-          }
-          if (patt.test((<HTMLTextAreaElement>event.target).value))
-          {
-            document.getElementById(spanId).textContent = "Valid";
-            document.getElementById(spanId).style.color = "green";
-          }
-          else {
-            document.getElementById(spanId).textContent = "Invalid, your input must match the pattern : " + patt;
-            document.getElementById(spanId).style.color = "red";
-          }
-        }
+   
 
-        function inputEventInputsOutputs(event, Schema, i)
-        {
-          var spanElt;
-          var spanId;
-          var patt;
-          var clickedTag;
-          if( (new RegExp(inpout[i] +'.[0-9]+.name').test(event.target.id)) || (new RegExp(inpout[i] +'.[0-9]+.description').test(event.target.id)))
-          {
-            clickedTag = "description";
-            if((new RegExp(inpout[i] +'.[0-9]+.name').test(event.target.id))) clickedTag = "name";
-            patt = new RegExp(Schema.properties[inpout[i]]["items"].properties[clickedTag].pattern);
-            spanId = inpout[i] + "." + event.target.id.substr(7,1) + "." + clickedTag + "Status";
-            if (document.getElementById(spanId) == null)
-            {
-              spanElt = document.createElement('span');
-              spanElt.setAttribute("id", spanId);
-              event.target.after(spanElt);
-            }
-            if (patt.test((<HTMLTextAreaElement>event.target).value))
-            {
-              document.getElementById(spanId).textContent = "Valid";
-              document.getElementById(spanId).style.color = "green";
-            }
-            else {
-              document.getElementById(spanId).textContent = "Invalid, your input must match the pattern : " + patt;
-              document.getElementById(spanId).style.color = "red";
-            }
-          }
-        }
-
-        function inputEventUi(event, Schema)
-        {
-          var spanElt;
-          var spanId;
-          var patt;
-          if((new RegExp('ui.[0-9]+.key').test(event.target.id)))
-          {
-            patt = new RegExp(Schema.properties["ui"]["items"].properties["key"]["oneOf"][0].pattern);
-            spanId = "ui." + event.target.id.substr(3,1) + "." + "key" + "Status";
-            
-            if (document.getElementById(spanId) == null)
-            {
-              spanElt = document.createElement('span');
-              spanElt.setAttribute("id", spanId);
-              event.target.after(spanElt);
-            }
-            if (patt.test((<HTMLTextAreaElement>event.target).value) || (<HTMLTextAreaElement>event.target).value == "fieldsets")
-            {
-              document.getElementById(spanId).textContent = "Valid";
-              document.getElementById(spanId).style.color = "green";
-            }
-            else {
-              document.getElementById(spanId).textContent = "Invalid, your input must match the pattern : " + patt + ", or be equal to fieldsets";
-              document.getElementById(spanId).style.color = "red";
-            }
-          }
-        }
-  };
-
-
-   Schema = mySchema;
-
-
-  myFieldBindings = {
+   myFieldBindings = {
     '/inputs': [
       {
         'input': (event, formProperty: FormProperty) => {
           const parent: PropertyGroup = formProperty.findRoot();
-          let i :number =0;
+          let i: number = 0;
           for (const objectProperty of parent.getProperty('inputs').properties)
           {
-            const idKey : string = "ui/" + i + "/blockIfPattern/key";
-            const child2: FormProperty = objectProperty.properties['name'];
-            const child1: FormProperty = parent.getProperty(idKey);
-            child1.setValue("inputs."+child2.value, false);
+            const idKey : string = "ui/" + i + "/key";
+            const child1: FormProperty = objectProperty.properties['name'];
+            const child2: FormProperty = parent.getProperty(idKey);
+            child2.setValue("inputs." + child1.value, false);
             ++i;
           }
         } 
@@ -193,14 +76,13 @@ export class AppComponent {
     ]
   };
 
-  
 
   open(content)
   {
+    console.log("hnaaaaaaaaaa");
    this.modalService.open(content);
-   console.log("Submited clicked");
    
-   this.value.properties = {
+   this.manifest.properties = {
       // task name field
       'taskName': {
         'type': 'string',
@@ -220,15 +102,15 @@ export class AppComponent {
   
     try {
       // default field bindings - none
-      this.value.fieldBindings = {};
+      this.manifest.fieldBindings = {};
       // TODO: validation of manifest ui description
-      this.value.inputs.forEach(input => {
+      this.manifest.inputs.forEach(input => {
         const inputSchema = {};
         // common properties
         inputSchema['key'] = 'inputs.' + input.name;
         // inputSchema['description'] = input.description;
         if (input.required) {
-          this.value.properties.inputs.required.push(input.name);
+          this.manifest.properties.inputs.required.push(input.name);
         }
         // type-specific properties
   
@@ -249,18 +131,18 @@ export class AppComponent {
             inputSchema['type'] = 'string';
             inputSchema['widget'] = 'select';
             inputSchema['oneOf'] = [];
-            input.options.values.forEach(value => {
+            input.enumOptions.values.forEach(value => {
               inputSchema['oneOf'].push({
                 'enum': [value],
                 'description': value
               });
             });
-            inputSchema['default'] = input.options.values[0];
+            inputSchema['default'] = input.enumOptions.values[0];
             break;
           case 'array':
             inputSchema['type'] = 'array';
             inputSchema['format'] = 'array';
-            inputSchema['items'] = input.options.items;
+            inputSchema['items'] = input.arrayOptions;
             break;
           // Workaround for https://github.com/guillotinaweb/ngx-schema-form/issues/332
           case 'number':
@@ -272,7 +154,7 @@ export class AppComponent {
             inputSchema['type'] = input.type;
         }
         // ui properties
-        const ui = this.value.ui.find(v => v.key === inputSchema['key']);
+        const ui = this.manifest.ui.find(v => v.key === inputSchema['key']);
         if (ui.hasOwnProperty('title')) {
           inputSchema['title'] = ui.title;
         }
@@ -298,7 +180,7 @@ export class AppComponent {
         if (ui.hasOwnProperty('bind')) {
           const sourceField = '/inputs/' + ui.bind;
           const targetField = ui['key'].split('.').join('/');
-          this.value.fieldBindings[sourceField] = [
+          this.manifest.fieldBindings[sourceField] = [
             {
               'input': (event, formProperty: FormProperty) => {
                 const parent: PropertyGroup = formProperty.findRoot();
@@ -312,18 +194,18 @@ export class AppComponent {
         if (ui.hasOwnProperty('default')) {
           inputSchema['default'] = ui.default;
         }
-        this.value.properties.inputs.properties[input.name] = inputSchema;
+        this.manifest.properties.inputs.properties[input.name] = inputSchema;
       });
       // field sets - arrange fields by groups
-      const fieldsetsList = this.value.ui.find(v => v.key === 'fieldsets');
+      const fieldsetsList = this.manifest.ui.find(v => v.key === 'fieldsets');
       if (fieldsetsList) {
-        this.value.properties.inputs.fieldsets = fieldsetsList.fieldsets;
+        this.manifest.properties.inputs.fieldsets = fieldsetsList.fieldsets;
       }
-      this.value.isSchemaValid = true;
+      this.manifest.isSchemaValid = true;
     } catch (error) {
       console.log(error);
-      this.value.properties = {};
-      this.value.isSchemaValid = false;
+      this.manifest.properties = {};
+      this.manifest.isSchemaValid = false;
     }
   }
 }
