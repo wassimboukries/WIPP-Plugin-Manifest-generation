@@ -6,7 +6,7 @@
       </button>
     </div>
     <div class="modal-body">
-        <sf-form [schema]="value"></sf-form>
+        <sf-form [schema]="value" [bindings]="value.fieldBindings"></sf-form>
     </div>
     <div class="modal-footer">
         <button type="button" class="btn btn-outline-dark" (click)="c('Save click')">Download</button>
