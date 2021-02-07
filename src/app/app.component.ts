@@ -214,6 +214,7 @@ export class AppComponent {
     return uri;
   }
   
+  
   handleFileInput(files : FileList)
   {
     const reader = new FileReader();
