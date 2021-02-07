@@ -4,6 +4,7 @@ import { ArrayWidgetComponent } from './array-widget/array-widget.component';
 import { BooleanWidgetComponent } from './boolean-widget/boolean-widget.component';
 import { IntegerWidgetComponent } from './integer-widget/integer-widget.component';
 import { ObjectWidgetComponent } from './object-widget/object-widget.component';
+import { SelectWidgetComponent } from './select-widget/select-widget.component';
 import { StringWidgetComponent } from './string-widget/string-widget.component';
 
 export class WidgetsRegistry extends DefaultWidgetRegistry {
@@ -15,6 +16,6 @@ export class WidgetsRegistry extends DefaultWidgetRegistry {
     this.register('customObject', ObjectWidgetComponent);
     this.register('customBoolean', BooleanWidgetComponent);
     this.register('customInteger', IntegerWidgetComponent);
-    
+    this.register('customSelect', SelectWidgetComponent);
   }
 }

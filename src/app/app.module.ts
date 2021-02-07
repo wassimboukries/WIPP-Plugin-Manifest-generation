@@ -13,10 +13,11 @@ import { ObjectWidgetComponent } from './customWidgets/object-widget/object-widg
 import { BooleanWidgetComponent } from './customWidgets/boolean-widget/boolean-widget.component';
 import { IntegerWidgetComponent } from './customWidgets/integer-widget/integer-widget.component';
 import { ReactiveFormsModule} from '@angular/forms';
+import { SelectWidgetComponent } from './customWidgets/select-widget/select-widget.component';
 
 @NgModule({
   declarations: [
-    AppComponent, StringWidgetComponent, ArrayWidgetComponent, ObjectWidgetComponent, BooleanWidgetComponent, IntegerWidgetComponent
+    AppComponent, StringWidgetComponent, ArrayWidgetComponent, ObjectWidgetComponent, BooleanWidgetComponent, IntegerWidgetComponent, SelectWidgetComponent
   ],
   imports: [
     SchemaFormModule.forRoot(),

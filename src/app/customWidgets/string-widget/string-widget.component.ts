@@ -9,7 +9,7 @@ import { ControlWidget } from "ngx-schema-form";
 <ng-template #notHiddenFieldBlock>
 <div class="widget form-group">
     <label [attr.for]="id" class="horizontal control-label">
-        {{ schema.title}}
+        {{ schema.title}} <span *ngIf="schema.isRequired" style="color:red;">*</span>
         </label>
         <ng-template #tipContent><div *ngIf=schema.description><u>Description</u> : {{this.schema.description}}</div><div *ngIf=schema.examples><u>Examples</u> : {{this.schema.examples}}</div></ng-template>
         <button *ngIf="schema.description || schema.examples" id="HelpButton" type="button" class="btn btn-outline-info mr-2" placement="right" [ngbTooltip]="tipContent">
