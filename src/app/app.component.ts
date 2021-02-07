@@ -1,7 +1,9 @@
-import { Component, ElementRef, Input, ViewChild } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormProperty, PropertyGroup } from 'ngx-schema-form';
 import {mySchema} from './WIPP schema.js';
 import {NgbModal, NgbModalConfig} from '@ng-bootstrap/ng-bootstrap';
+import { DomSanitizer } from '@angular/platform-browser';
+
 
 
 @Component({
@@ -15,16 +17,14 @@ import {NgbModal, NgbModalConfig} from '@ng-bootstrap/ng-bootstrap';
 export class AppComponent {
  manifest: any;
  Schema = mySchema;
-
- @ViewChild('content') contentInTs: ElementRef;
+ fileUrl;
  
- constructor(config: NgbModalConfig, private modalService: NgbModal) {
+ constructor(config: NgbModalConfig, private modalService: NgbModal, private sanitizer: DomSanitizer) {
    config.backdrop = 'static';
    config.keyboard = false;
-   
  }
- 
- ngAfterViewInit() {
+
+  ngAfterViewInit() {
        var btnAddInput = document.getElementById('addInputButton');
        var btnAddUi = document.getElementById('addUiButton');
 
@@ -46,9 +46,7 @@ export class AppComponent {
        /*btnRemoveInput.addEventListener("click", () => {
         btnRemoveUi.click();
        });*/
-       
-         
-    };
+  };
 
     isFormValid()
     {
@@ -206,6 +204,22 @@ export class AppComponent {
       this.manifest.properties = {};
       this.manifest.isSchemaValid = false;
     }
+    
+  }
+
+  generateUri()
+  {
+    var theJSON = JSON.stringify(this.manifest);
+    var uri = this.sanitizer.bypassSecurityTrustUrl("data:text/json;charset=UTF-8," + encodeURIComponent(theJSON));
+    return uri;
+  }
+  
+  handleFileInput(files : FileList)
+  {
+    const reader = new FileReader();
+    reader.readAsText(files.item(0));
+    reader.onload = () => this.manifest = JSON.parse(reader.result.toString());
+    
   }
 }
 

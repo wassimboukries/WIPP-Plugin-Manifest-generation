@@ -1,5 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -25,7 +26,8 @@ import { SelectWidgetComponent } from './customWidgets/select-widget/select-widg
     BrowserModule,
     CommonModule,
     AppRoutingModule,
-    NgbModule
+    NgbModule,
+    FormsModule
   ],
   providers: [{provide: WidgetRegistry, useClass: WidgetsRegistry}],
   bootstrap: [AppComponent],

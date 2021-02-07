@@ -9,7 +9,7 @@
     <div class="modal-body">
         <sf-form [schema]="manifest" [bindings]="manifest.fieldBindings[sourceField]"></sf-form>
     </div>
-    
+
     <div class="modal-footer">
         <button type="button" class="btn btn-outline-dark" (click)="c('Close click')">Close</button>
     </div>
@@ -18,13 +18,17 @@
 <div class="container-fluid">
     <div class="row page">
         <div class="col-md-5">
-            <sf-form [schema]="Schema" (onChange)="manifest=$event.value" [bindings]="myFieldBindings"></sf-form>
+            <sf-form [schema]="Schema" [bindings]="myFieldBindings"  [(ngModel)]="manifest"></sf-form>
         </div>
 
         <div class="col-md- manifest">
-            <h3>Manifest:</h3>
-            <pre>{{manifest | json}}</pre>
-            <button [disabled] = "!isFormValid()" type="button" [ngClass] ="{'banIcon': !isFormValid()}" class="btn btn-primary" (click)="open(content)">Render</button>
+            <div style="position: fixed;">
+                <h3>Manifest:</h3>
+                <div id="manifest"><pre>{{manifest | json}}</pre></div>
+                <button [disabled]="!isFormValid()" type="button" [ngClass] ="{'banIcon': !isFormValid()}"  class="btn btn-outline-primary manifestB" (click)="open(content)">Render Form</button>
+                <a class="btn btn-outline-primary manifestB" [href]="generateUri()" download="Wipp-Manifest.json">Download Manifest</a>
+                <input type="file" class="btn btn-outline-primary" (change)="handleFileInput($event.target.files)"/>
+            </div>
         </div>
     </div>
 </div>
