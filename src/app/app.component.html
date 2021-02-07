@@ -24,7 +24,7 @@
         <div class="col-md- manifest">
             <h3>Manifest:</h3>
             <pre>{{manifest | json}}</pre>
-            <button [disabled] = "!isFormValid()" type="button" class="btn btn-primary" (click)="open(content)">Render</button>
+            <button [disabled] = "!isFormValid()" type="button" [ngClass] ="{'banIcon': !isFormValid()}" class="btn btn-primary" (click)="open(content)">Render</button>
         </div>
     </div>
 </div>
