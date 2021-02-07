@@ -88,7 +88,6 @@ ngAfterViewInit() {
 
   open(content)
   {
-    console.log("hnaaaaaaaaaa");
    this.modalService.open(content);
    
    this.manifest.properties = {

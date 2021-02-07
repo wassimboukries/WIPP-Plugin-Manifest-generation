@@ -24,7 +24,7 @@
         <div class="col-md- manifest">
             <h3>Manifest:</h3>
             <pre>{{manifest | json}}</pre>
-            <button [disabled]="isFormValid() == false" type="button" class="btn btn-outline-primary manifestB" (click)="open(content)">Render Form</button>
+            <button [disabled]="!isFormValid()" type="button" class="btn btn-outline-primary manifestB" (click)="open(content)">Render Form</button>
             <button type="submit" class="btn btn-outline-primary manifestB"><a [href]="fileUrl" download="Wipp-Manifest.json">Download Manifest</a></button>
             <button type="button" class="btn btn-outline-primary"><input type="file" id="inputManifest" (change)="handleFileInput($event.target.files)"/></button>
         </div>
