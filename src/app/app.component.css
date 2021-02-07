@@ -7,6 +7,7 @@
 }
 
 #manifest {
-  position: static !important;
+  position: static;
+  height: 85vh;
   overflow: scroll;
 }
