@@ -13,7 +13,7 @@ import {  ArrayWidget } from "ngx-schema-form";
     </button>
 	<div *ngFor="let itemProperty of formProperty.properties">
 		<sf-form-element [formProperty]="itemProperty"></sf-form-element>
-		<button  [id]="(id === 'ui' ? 'removeUiButton': (id == 'inputs' ? 'removeInputButton' : '' ))"  (click)="removeItem(itemProperty)" class="btn btn-outline-secondary array-remove-button"
+		<button  [class]="(id === 'ui' ? 'removeUiButton': (id == 'inputs' ? 'removeInputButton': '' ))"  [ngClass]="{'d-none': id === 'ui'}" (click)="removeItem(itemProperty)" class="btn btn-outline-secondary array-remove-button"
 			[disabled]="isRemoveButtonDisabled()" 
 			*ngIf="!(schema.hasOwnProperty('minItems') && schema.hasOwnProperty('maxItems') && schema.minItems === schema.maxItems)"
 			>
@@ -30,6 +30,6 @@ import {  ArrayWidget } from "ngx-schema-form";
 })
 export class ArrayWidgetComponent extends ArrayWidget  {
 
-
+	
 	
 }

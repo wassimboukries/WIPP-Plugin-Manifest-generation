@@ -27,25 +27,12 @@ export class AppComponent {
   ngAfterViewInit() {
        var btnAddInput = document.getElementById('addInputButton');
        var btnAddUi = document.getElementById('addUiButton');
+       
 
        btnAddInput.addEventListener("click", () => {
         btnAddUi.click();
-       });
-
-       document.querySelector('body').addEventListener('click', event => {
-        var targett = event.target as HTMLElement;
-        if (targett.matches('.array-remove-button')){
-           var btnRemove2 : HTMLElement = document.getElementsByClassName('array-remove-button')[0] as HTMLElement;
-           btnRemove2.click();
-         }
-      });
-
-       //var btnRemoveInput = document.getElementById('removeInputButton');
-       //var btnRemoveUi = document.getElementById('removeUiButton');
-       
-       /*btnRemoveInput.addEventListener("click", () => {
-        btnRemoveUi.click();
-       });*/
+        this.mappingRemoveButtons();
+        });
   };
 
     isFormValid()
@@ -53,6 +40,18 @@ export class AppComponent {
       return document.getElementsByTagName('form')[0].checkValidity();
     }
 
+    mappingRemoveButtons()
+    {
+      var listeInputsButtons;
+      var listeUiButtons;
+      listeInputsButtons = document.getElementsByClassName('removeInputButton');
+      listeUiButtons = document.getElementsByClassName('removeUiButton');
+      for(let i = 0; i < listeInputsButtons.length; i++)
+      {
+        listeInputsButtons[i].addEventListener("click", () => listeUiButtons[i].click());
+      }
+
+    }
    
 
    myFieldBindings = {
@@ -219,7 +218,6 @@ export class AppComponent {
     const reader = new FileReader();
     reader.readAsText(files.item(0));
     reader.onload = () => this.manifest = JSON.parse(reader.result.toString());
-    
   }
 }
 
