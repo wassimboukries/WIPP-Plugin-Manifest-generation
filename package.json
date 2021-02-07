@@ -1,5 +1,5 @@
 {
-    "name": "WIPP form generation",
+    "name": "testing-app",
     "version": "0.0.0",
     "scripts": {
         "ng": "ng",
