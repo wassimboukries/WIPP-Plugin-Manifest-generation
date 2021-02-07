@@ -22,7 +22,7 @@
         </div>
 
         <div class="col-md- manifest">
-            <div style="position: fixed;">
+            <div style="position: fixed; margin-left: 50px; margin-top: 8px;">
                 <h3>Manifest:</h3>
                 <div id="manifest"><pre>{{manifest | json}}</pre></div>
                 <button [disabled]="!isFormValid()" type="button" [ngClass] ="{'banIcon': !isFormValid()}"  class="btn btn-outline-primary manifestB" (click)="open(content)">Render Form</button>
