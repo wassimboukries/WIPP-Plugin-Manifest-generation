@@ -1,34 +1,67 @@
 <ng-template #content let-c="close" let-d="dismiss">
-    <div class="modal-header">
-        <h3 class="modal-title" id="modal-basic-title">Manifest</h3>
-        <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
-            <span aria-hidden="true">&times;</span>
-        </button>
-    </div>
-
-    <div class="modal-body">
-        <sf-form [schema]="manifest" [bindings]="manifest.fieldBindings[sourceField]"></sf-form>
-    </div>
-
-    <div class="modal-footer">
-        <button type="button" class="btn btn-outline-dark" (click)="c('Close click')">Close</button>
-    </div>
+  <div class="modal-header">
+    <h3 class="modal-title" id="modal-basic-title">Manifest</h3>
+    <button
+      type="button"
+      class="close"
+      aria-label="Close"
+      (click)="d('Cross click')"
+    >
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <sf-form
+      [schema]="manifest"
+      [bindings]="manifest.fieldBindings[sourceField]"
+    ></sf-form>
+  </div>
+  <div class="modal-footer">
+    <button
+      type="button"
+      class="btn btn-outline-dark"
+      (click)="c('Close click')"
+    >
+      Close
+    </button>
+  </div>
 </ng-template>
-
 <div class="container-fluid">
-    <div class="row page">
-        <div class="col-md-5">
-            <sf-form [schema]="Schema" [bindings]="myFieldBindings"  [(ngModel)]="manifest"></sf-form>
-        </div>
-
-        <div class="col-md- manifest">
-            <div style="position: fixed; margin-left: 50px; margin-top: 8px;">
-                <h3>Manifest:</h3>
-                <div id="manifest"><pre>{{manifest | json}}</pre></div>
-                <button [disabled]="!isFormValid()" type="button" [ngClass] ="{'banIcon': !isFormValid()}"  class="btn btn-outline-primary manifestB" (click)="open(content)">Render Form</button>
-                <a class="btn btn-outline-primary manifestB" [href]="generateUri()" download="Wipp-Manifest.json">Download Manifest</a>
-                <input type="file" class="btn btn-outline-primary" (change)="handleFileInput($event.target.files)"/>
-            </div>
-        </div>
+  <div class="row page">
+    <div class="col-md-5">
+      <sf-form
+        [schema]="Schema"
+        [bindings]="myFieldBindings"
+        [(ngModel)]="manifest"
+      ></sf-form>
     </div>
+    <div class="col-md-5 manifest">
+      <div id="manifestAndButtons">
+        <h3>Manifest:</h3>
+        <div id="manifest">
+          <pre>{{ manifest | json }}</pre>
+        </div>
+        <button
+          [disabled]="!isFormValid()"
+          type="button"
+          [ngClass]="{ banIcon: !isFormValid() }"
+          class="btn btn-outline-primary manifestB"
+          (click)="open(content)"
+        >
+          Render Form
+        </button>
+        <a
+          class="btn btn-outline-primary manifestB"
+          [href]="generateUri()"
+          download="Wipp-Manifest.json"
+          >Download Manifest</a
+        >
+        <input
+          type="file"
+          class="btn btn-outline-primary"
+          (change)="handleFileInput($event.target.files)"
+        />
+      </div>
+    </div>
+  </div>
 </div>
