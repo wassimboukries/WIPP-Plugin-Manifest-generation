@@ -6,8 +6,26 @@
   margin-right: 10px;
 }
 
+#manifestAndButtons {
+  position: fixed;
+  margin-left: 50px;
+  margin-top: 8px;
+}
+
 #manifest {
   position: static;
   height: 85vh;
   overflow: scroll;
+}
+
+@media (max-width: 992px) {
+  #manifestAndButtons {
+    position: static;
+    margin-left: 0px;
+    overflow: visible;
+  }
+
+  #manifest {
+    height: 100%;
+  }
 }

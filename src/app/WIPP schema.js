@@ -466,7 +466,7 @@ export const mySchema = {
                   "$id":"#/properties/outputs/items/properties/type",
                   "type":"string",
                   "widget":{
-                     "id":"select"
+                     "id":"customSelect"
                   },
                   "enum":[
                      "collection",
