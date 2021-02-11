@@ -1,119 +1,112 @@
 import { Component } from '@angular/core';
 import { FormProperty, PropertyGroup } from 'ngx-schema-form';
-import {mySchema} from './WIPP schema.js';
-import {NgbModal, NgbModalConfig} from '@ng-bootstrap/ng-bootstrap';
+import { mySchema } from './WIPP schema.js';
+import { NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
 import { DomSanitizer } from '@angular/platform-browser';
-
-
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
-  providers: [NgbModalConfig, NgbModal]
+  providers: [NgbModalConfig, NgbModal],
 })
-
-
 export class AppComponent {
- manifest: any;
- Schema = mySchema;
- fileUrl;
- 
- constructor(config: NgbModalConfig, private modalService: NgbModal, private sanitizer: DomSanitizer) {
-   config.backdrop = 'static';
-   config.keyboard = false;
- }
+  manifest: any;
+  Schema = mySchema;
+  fileUrl;
+  renderedManifest;
+
+  constructor(
+    config: NgbModalConfig,
+    private modalService: NgbModal,
+    private sanitizer: DomSanitizer
+  ) {
+    config.backdrop = 'static';
+    config.keyboard = false;
+  }
 
   ngAfterViewInit() {
-       var btnAddInput = document.getElementById('addInputButton');
-       var btnAddUi = document.getElementById('addUiButton');
-       
+    var btnAddInput = document.getElementById('addInputButton');
+    var btnAddUi = document.getElementById('addUiButton');
 
-       btnAddInput.addEventListener("click", () => {
-        btnAddUi.click();
-        this.mappingRemoveButtons();
-        });
-  };
+    btnAddInput.addEventListener('click', () => {
+      btnAddUi.click();
+      this.mappingRemoveButtons();
+    });
+  }
 
-    isFormValid()
-    {
-      return document.getElementsByTagName('form')[0].checkValidity();
-    }
+  isFormValid() {
+    return document.getElementsByTagName('form')[0].checkValidity();
+  }
 
-    mappingRemoveButtons()
-    {
-      var listeInputsButtons;
-      var listeUiButtons;
-      listeInputsButtons = document.getElementsByClassName('removeInputButton');
-      listeUiButtons = document.getElementsByClassName('removeUiButton');
-      for(let i = 0; i < listeInputsButtons.length; i++)
-      {
-        listeInputsButtons[i].addEventListener("click", () => listeUiButtons[i].click());
-      }
+  mappingRemoveButtons() {
+    var listeInputsButtons;
+    var listeUiButtons;
+    listeInputsButtons = document.getElementsByClassName('removeInputButton');
+    listeUiButtons = document.getElementsByClassName('removeUiButton');
+    for (let i = 0; i < listeInputsButtons.length; i++)
+      listeInputsButtons[i].onclick = () => listeUiButtons[i].click();
+  }
 
-    }
-   
-
-   myFieldBindings = {
+  myFieldBindings = {
     '/inputs': [
       {
-        'input': (event, formProperty: FormProperty) => {
+        input: (event, formProperty: FormProperty) => {
           const parent: PropertyGroup = formProperty.findRoot();
           let i: number = 0;
-          for (const objectProperty of parent.getProperty('inputs').properties)
-          {
-            const idKey : string = "ui/" + i + "/key";
+          for (const objectProperty of parent.getProperty('inputs')
+            .properties) {
+            const idKey: string = 'ui/' + i + '/key';
             const child1: FormProperty = objectProperty.properties['name'];
             const child2: FormProperty = parent.getProperty(idKey);
-            child2.setValue("inputs." + child1.value, false);
+            child2.setValue('inputs.' + child1.value, false);
             ++i;
           }
-        } 
-      }
-    ]
+        },
+      },
+    ],
   };
 
+  open(content) {
+    this.modalService.open(content);
+    this.renderedManifest = { ...this.manifest };
 
-  open(content)
-  {
-   this.modalService.open(content);
-   
-   this.manifest.properties = {
+    this.renderedManifest.properties = {
       // task name field
-      'taskName': {
-        'type': 'string',
-        'description': 'Task name',
-        'format': 'string',
-        'widget': 'string',
-        'placeholder': 'Enter a name for this task',
-        'maxLength': 127 //- this.workflow.name.length
+      taskName: {
+        type: 'string',
+        description: 'Task name',
+        format: 'string',
+        widget: 'string',
+        placeholder: 'Enter a name for this task',
+        maxLength: 127, //- this.workflow.name.length
       },
       // job inputs fields
-      'inputs': {
-        'type': 'object',
-        'required': [],
-        'properties': {}
-      }
+      inputs: {
+        type: 'object',
+        required: [],
+        properties: {},
+      },
     };
-  
+
     try {
       // default field bindings - none
-      this.manifest.fieldBindings = {};
+      this.renderedManifest.fieldBindings = {};
       // TODO: validation of manifest ui description
-      this.manifest.inputs.forEach(input => {
+      this.renderedManifest.inputs.forEach((input) => {
         const inputSchema = {};
         // common properties
         inputSchema['key'] = 'inputs.' + input.name;
         // inputSchema['description'] = input.description;
         if (input.required) {
-          this.manifest.properties.inputs.required.push(input.name);
+          this.renderedManifest.properties.inputs.required.push(input.name);
         }
         // type-specific properties
-  
+
         switch (input.type) {
           case 'collection':
           case 'stitchingVector':
-          case  'pyramidAnnotation':
+          case 'pyramidAnnotation':
           case 'pyramid':
           case 'tensorflowModel':
           case 'csvCollection':
@@ -127,10 +120,10 @@ export class AppComponent {
             inputSchema['type'] = 'string';
             inputSchema['widget'] = 'select';
             inputSchema['oneOf'] = [];
-            input.enumOptions.values.forEach(value => {
+            input.enumOptions.values.forEach((value) => {
               inputSchema['oneOf'].push({
-                'enum': [value],
-                'description': value
+                enum: [value],
+                description: value,
               });
             });
             inputSchema['default'] = input.enumOptions.values[0];
@@ -150,7 +143,9 @@ export class AppComponent {
             inputSchema['type'] = input.type;
         }
         // ui properties
-        const ui = this.manifest.ui.find(v => v.key === inputSchema['key']);
+        const ui = this.renderedManifest.ui.find(
+          (v) => v.key === inputSchema['key']
+        );
         if (ui.hasOwnProperty('title')) {
           inputSchema['title'] = ui.title;
         }
@@ -164,7 +159,8 @@ export class AppComponent {
             const inputName = conditionElements[0].split('.');
             if (inputName.length > 0) {
               inputSchema['visibleIf'] = {};
-              inputSchema['visibleIf'][inputName[inputName.length - 1]] = conditionElements[1];
+              inputSchema['visibleIf'][inputName[inputName.length - 1]] =
+                conditionElements[1];
             }
           }
         }
@@ -176,48 +172,53 @@ export class AppComponent {
         if (ui.hasOwnProperty('bind')) {
           const sourceField = '/inputs/' + ui.bind;
           const targetField = ui['key'].split('.').join('/');
-          this.manifest.fieldBindings[sourceField] = [
+          this.renderedManifest.fieldBindings[sourceField] = [
             {
-              'input': (event, formProperty: FormProperty) => {
+              input: (event, formProperty: FormProperty) => {
                 const parent: PropertyGroup = formProperty.findRoot();
                 const target: FormProperty = parent.getProperty(targetField);
-  
+
                 target.setValue(formProperty.value, false);
-              }
-            }
+              },
+            },
           ];
         }
         if (ui.hasOwnProperty('default')) {
           inputSchema['default'] = ui.default;
         }
-        this.manifest.properties.inputs.properties[input.name] = inputSchema;
+        this.renderedManifest.properties.inputs.properties[
+          input.name
+        ] = inputSchema;
       });
       // field sets - arrange fields by groups
-      const fieldsetsList = this.manifest.ui.find(v => v.key === 'fieldsets');
+      const fieldsetsList = this.renderedManifest.ui.find(
+        (v) => v.key === 'fieldsets'
+      );
       if (fieldsetsList) {
-        this.manifest.properties.inputs.fieldsets = fieldsetsList.fieldsets;
+        this.renderedManifest.properties.inputs.fieldsets =
+          fieldsetsList.fieldsets;
       }
-      this.manifest.isSchemaValid = true;
+      this.renderedManifest.isSchemaValid = true;
     } catch (error) {
       console.log(error);
-      this.manifest.properties = {};
-      this.manifest.isSchemaValid = false;
+      this.renderedManifest.properties = {};
+      this.renderedManifest.isSchemaValid = false;
     }
-    
   }
 
-  generateUri()
-  {
+  generateUri() {
     var theJSON = JSON.stringify(this.manifest);
-    var uri = this.sanitizer.bypassSecurityTrustUrl("data:text/json;charset=UTF-8," + encodeURIComponent(theJSON));
+    var uri = this.sanitizer.bypassSecurityTrustUrl(
+      'data:text/json;charset=UTF-8,' + encodeURIComponent(theJSON)
+    );
     return uri;
   }
-  
-  handleFileInput(files : FileList)
-  {
+
+  handleFileInput(files: FileList) {
     const reader = new FileReader();
     reader.readAsText(files.item(0));
-    reader.onload = () => this.manifest = JSON.parse(reader.result.toString());
+    reader.onload = () =>
+      (this.manifest = JSON.parse(reader.result.toString()));
+    setTimeout(() => this.mappingRemoveButtons(), 30);
   }
 }
-
