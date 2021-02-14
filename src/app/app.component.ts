@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component } from '@angular/core';
 import { FormProperty, PropertyGroup } from 'ngx-schema-form';
 import { mySchema } from './WIPP schema.js';
 import { NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
@@ -10,7 +10,7 @@ import { DomSanitizer } from '@angular/platform-browser';
   styleUrls: ['./app.component.css'],
   providers: [NgbModalConfig, NgbModal],
 })
-export class AppComponent {
+export class AppComponent implements AfterViewInit {
   manifest: any;
   Schema = mySchema;
   fileUrl;
@@ -19,7 +19,8 @@ export class AppComponent {
   constructor(
     config: NgbModalConfig,
     private modalService: NgbModal,
-    private sanitizer: DomSanitizer
+    private sanitizer: DomSanitizer,
+    private cd: ChangeDetectorRef
   ) {
     config.backdrop = 'static';
     config.keyboard = false;
@@ -33,10 +34,12 @@ export class AppComponent {
       btnAddUi.click();
       this.mappingRemoveButtons();
     });
+
+    this.cd.detectChanges();
   }
 
-  isFormValid() {
-    return document.getElementsByTagName('form')[0].checkValidity();
+  verifyFormValidation() {
+    return document.querySelector('form').checkValidity();
   }
 
   mappingRemoveButtons() {
@@ -44,8 +47,21 @@ export class AppComponent {
     var listeUiButtons;
     listeInputsButtons = document.getElementsByClassName('removeInputButton');
     listeUiButtons = document.getElementsByClassName('removeUiButton');
-    for (let i = 0; i < listeInputsButtons.length; i++)
-      listeInputsButtons[i].onclick = () => listeUiButtons[i].click();
+    for (let i = 0; i < listeInputsButtons.length; i++) {
+      if (i >= 1) {
+        listeInputsButtons[i].removeEventListener(
+          'click',
+          this.clickRemoveEventListener(listeUiButtons[i - 1])
+        );
+      }
+      listeInputsButtons[i].addEventListener('click', () =>
+        this.clickRemoveEventListener(listeUiButtons[i])
+      );
+    }
+  }
+
+  clickRemoveEventListener(element) {
+    element.click();
   }
 
   myFieldBindings = {

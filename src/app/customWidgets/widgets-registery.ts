@@ -1,4 +1,4 @@
-  
+import { Injectable } from '@angular/core';
 import { DefaultWidgetRegistry } from 'ngx-schema-form';
 import { ArrayWidgetComponent } from './array-widget/array-widget.component';
 import { BooleanWidgetComponent } from './boolean-widget/boolean-widget.component';
@@ -7,6 +7,7 @@ import { ObjectWidgetComponent } from './object-widget/object-widget.component';
 import { SelectWidgetComponent } from './select-widget/select-widget.component';
 import { StringWidgetComponent } from './string-widget/string-widget.component';
 
+@Injectable()
 export class WidgetsRegistry extends DefaultWidgetRegistry {
   constructor() {
     super();

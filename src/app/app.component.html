@@ -25,7 +25,7 @@
         <div id="manifest">
           <pre>{{ manifest | json }}</pre>
         </div>
-        <button [disabled]="!isFormValid()" type="button" [ngClass]="{ banIcon: !isFormValid() }"
+        <button [disabled]="!verifyFormValidation()" type="button" [ngClass]="{ banIcon: !verifyFormValidation() }"
           class="btn btn-outline-primary manifestB" (click)="open(content)">
           Render Form
         </button>
