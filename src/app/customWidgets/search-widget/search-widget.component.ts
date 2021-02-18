@@ -13,9 +13,9 @@ export class SearchWidgetComponent extends StringWidget {
       debounceTime(200),
       distinctUntilChanged(),
       map((term) =>
-        this.schema.enum
-          .filter((v) => v.toLowerCase().indexOf(term.toLowerCase()) > -1)
-          .slice(0, 10)
+        this.schema.enum.filter(
+          (v) => v.toLowerCase().indexOf(term.toLowerCase()) > -1
+        )
       )
     );
 }
