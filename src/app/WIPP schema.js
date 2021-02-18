@@ -168,7 +168,9 @@ export const mySchema = {
                     "type": {
                         "$id": "#/properties/inputs/items/properties/type",
                         "type": "string",
-                        "widget": "customSearch",
+                        "widget": {
+                            "id": "customSelect"
+                        },
                         "enum": [
                             "collection",
                             "stitchingVector",
@@ -459,7 +461,9 @@ export const mySchema = {
                     "type": {
                         "$id": "#/properties/outputs/items/properties/type",
                         "type": "string",
-                        "widget": "customSearch",
+                        "widget": {
+                            "id": "customSelect"
+                        },
                         "enum": [
                             "collection",
                             "stitchingVector",

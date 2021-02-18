@@ -110,22 +110,54 @@ export class AppComponent implements AfterViewInit {
           this.renderedManifest.properties.inputs.required.push(input.name);
         }
         // type-specific properties
-
+        inputSchema['widget'] = 'customSearch';
+        inputSchema['format'] = input.type;
+        inputSchema['type'] = 'string';
         switch (input.type) {
           case 'collection':
+            inputSchema['enum'] = [
+              'collection-A',
+              'collection-B',
+              'collection-C',
+            ];
+            break;
+
           case 'stitchingVector':
+            inputSchema['enum'] = [
+              'stitchingVector-A',
+              'stitchingVector-B',
+              'stitchingVector-C',
+            ];
+            break;
           case 'pyramidAnnotation':
+            inputSchema['enum'] = [
+              'pyramidAnnotation-A',
+              'pyramidAnnotation-B',
+              'pyramidAnnotation-C',
+            ];
+            break;
           case 'pyramid':
+            inputSchema['enum'] = ['pyramid-A', 'pyramid-B', 'pyramid-C'];
+            break;
           case 'tensorflowModel':
+            inputSchema['enum'] = [
+              'tensorflowModel-A',
+              'tensorflowModel-B',
+              'tensorflowModel-C',
+            ];
+            break;
           case 'csvCollection':
+            inputSchema['enum'] = [
+              'csvCollection-A',
+              'csvCollection-B',
+              'csvCollection-C',
+            ];
+            break;
           case 'notebook':
-            inputSchema['type'] = 'string';
-            inputSchema['widget'] = 'search';
-            inputSchema['format'] = input.type;
+            inputSchema['enum'] = ['notebook-A', 'notebook-B', 'notebook-C'];
             //inputSchema['getOutputs'] = () => this.jobOutputs[input.type];
             break;
           case 'enum':
-            inputSchema['type'] = 'string';
             inputSchema['widget'] = 'select';
             inputSchema['oneOf'] = [];
             input.enumOptions.values.forEach((value) => {
@@ -144,7 +176,6 @@ export class AppComponent implements AfterViewInit {
           // Workaround for https://github.com/guillotinaweb/ngx-schema-form/issues/332
           case 'number':
           case 'float':
-            inputSchema['type'] = 'string';
             inputSchema['widget'] = 'integer';
             break;
           default:

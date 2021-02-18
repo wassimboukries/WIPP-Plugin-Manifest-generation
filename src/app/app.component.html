@@ -23,7 +23,7 @@
       <div id="manifestAndButtons">
         <h3>Manifest:</h3>
         <div id="manifest">
-          <pre>{{ manifest | json }}</pre>
+          <pre>{{ renderedManifest | json }}</pre>
         </div>
         <button [disabled]="!verifyFormValidation()" type="button" [ngClass]="{ banIcon: !verifyFormValidation() }"
           class="btn btn-outline-primary manifestB" (click)="open(content)">
