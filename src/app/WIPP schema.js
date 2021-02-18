@@ -18,14 +18,14 @@ export const mySchema = {
         "name": {
             "$id": "#/properties/name",
             "type": "string",
+            "widget": "customString",
             "title": "Name of the plugin",
             "default": "",
             "examples": [
                 "My Awesome Plugin"
             ],
             "minLength": 1,
-            "pattern": "^(.*)$",
-            "widget": "customString"
+            "pattern": "^(.*)$"
         },
         "version": {
             "$id": "#/properties/version",
@@ -168,9 +168,7 @@ export const mySchema = {
                     "type": {
                         "$id": "#/properties/inputs/items/properties/type",
                         "type": "string",
-                        "widget": {
-                            "id": "customSelect"
-                        },
+                        "widget": "customSearch",
                         "enum": [
                             "collection",
                             "stitchingVector",
@@ -320,17 +318,17 @@ export const mySchema = {
                                         }
                                     },
                                     "examples": [{
-                                            "description": "Area",
-                                            "enum": [
-                                                "Feature2DJava_Area"
-                                            ]
-                                        },
-                                        {
-                                            "enum": [
-                                                "Feature2DJava_Mean"
-                                            ],
-                                            "description": "Mean"
-                                        }
+                                        "description": "Area",
+                                        "enum": [
+                                            "Feature2DJava_Area"
+                                        ]
+                                    },
+                                    {
+                                        "enum": [
+                                            "Feature2DJava_Mean"
+                                        ],
+                                        "description": "Mean"
+                                    }
                                     ]
                                 }
                             },
@@ -390,17 +388,17 @@ export const mySchema = {
                             "minItems": 1,
                             "title": "Select feature",
                             "oneOf": [{
-                                    "description": "Area",
-                                    "enum": [
-                                        "Feature2DJava_Area"
-                                    ]
-                                },
-                                {
-                                    "description": "Mean",
-                                    "enum": [
-                                        "Feature2DJava_Mean"
-                                    ]
-                                }
+                                "description": "Area",
+                                "enum": [
+                                    "Feature2DJava_Area"
+                                ]
+                            },
+                            {
+                                "description": "Mean",
+                                "enum": [
+                                    "Feature2DJava_Mean"
+                                ]
+                            }
                             ]
                         }]
                     },
@@ -461,9 +459,7 @@ export const mySchema = {
                     "type": {
                         "$id": "#/properties/outputs/items/properties/type",
                         "type": "string",
-                        "widget": {
-                            "id": "customSelect"
-                        },
+                        "widget": "customSearch",
                         "enum": [
                             "collection",
                             "stitchingVector",

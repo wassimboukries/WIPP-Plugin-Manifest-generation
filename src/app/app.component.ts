@@ -13,8 +13,8 @@ import { DomSanitizer } from '@angular/platform-browser';
 export class AppComponent implements AfterViewInit {
   manifest: any;
   Schema = mySchema;
-  fileUrl;
-  renderedManifest;
+  fileUrl: any;
+  renderedManifest: any;
 
   constructor(
     config: NgbModalConfig,
@@ -39,29 +39,21 @@ export class AppComponent implements AfterViewInit {
   }
 
   verifyFormValidation() {
-    return document.querySelector('form').checkValidity();
+    var result: boolean;
+    result = document.querySelector('form').checkValidity();
+    return result;
   }
 
   mappingRemoveButtons() {
-    var listeInputsButtons;
-    var listeUiButtons;
+    var listeInputsButtons: any;
+    var listeUiButtons: any;
     listeInputsButtons = document.getElementsByClassName('removeInputButton');
     listeUiButtons = document.getElementsByClassName('removeUiButton');
     for (let i = 0; i < listeInputsButtons.length; i++) {
-      if (i >= 1) {
-        listeInputsButtons[i].removeEventListener(
-          'click',
-          this.clickRemoveEventListener(listeUiButtons[i - 1])
-        );
-      }
-      listeInputsButtons[i].addEventListener('click', () =>
-        this.clickRemoveEventListener(listeUiButtons[i])
-      );
+      listeInputsButtons[i].addEventListener('click', () => {
+        listeUiButtons[i].click();
+      });
     }
-  }
-
-  clickRemoveEventListener(element) {
-    element.click();
   }
 
   myFieldBindings = {
