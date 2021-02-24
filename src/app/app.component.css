@@ -1,31 +1,37 @@
 .banIcon {
-  cursor: not-allowed;
+    cursor: not-allowed;
 }
 
 .manifestB {
-  margin-right: 10px;
+    margin-right: 10px;
 }
 
 #manifestAndButtons {
-  position: fixed;
-  margin-left: 50px;
-  margin-top: 8px;
+    position: fixed;
+    margin-left: 50px;
+    margin-top: 8px;
+    width: 51%;
 }
 
 #manifest {
-  position: static;
-  height: 85vh;
-  overflow: scroll;
+    position: static;
+    height: 85vh;
 }
 
 @media (max-width: 992px) {
-  #manifestAndButtons {
-    position: static;
-    margin-left: 0px;
-    overflow: visible;
-  }
+    #manifestAndButtons {
+        position: static;
+        margin-left: 0px;
+        overflow: visible;
+    }
+    #manifest {
+        height: 100%;
+    }
+}
 
-  #manifest {
-    height: 100%;
-  }
+.col-md-5 {}
+
+#imageWipp {
+    margin: 10px 0 10px 0;
+    width: 100%;
 }

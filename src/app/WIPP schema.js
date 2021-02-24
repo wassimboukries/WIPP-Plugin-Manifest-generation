@@ -2,7 +2,7 @@ export const mySchema = {
     "$schema": "http://json-schema.org/draft-07/schema#",
     "$id": "https://raw.githubusercontent.com/usnistgov/WIPP-Plugins-base-templates/master/plugin-manifest/schema/wipp-plugin-manifest-schema.json",
     "type": "object",
-    "title": "WIPP Plugin manifest",
+    //"title": "WIPP Plugin manifest",
     "default": null,
     "required": [
         "name",
