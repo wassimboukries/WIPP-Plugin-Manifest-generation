@@ -6,7 +6,7 @@
     </button>
   </div>
   <div class="modal-body">
-    <sf-form [schema]="renderedManifest" [bindings]="renderedManifest.fieldBindings[sourceField]"></sf-form>
+    <sf-form [schema]="renderedManifest" [bindings]="renderedManifest.fieldBindings"></sf-form>
   </div>
   <div class="modal-footer">
     <button type="button" class="btn btn-outline-dark" (click)="c('Close click')">
@@ -14,15 +14,18 @@
     </button>
   </div>
 </ng-template>
+
 <div class="container-fluid">
   <div class="row page">
+
     <div class="col-md-5">
       <sf-form [schema]="Schema" [bindings]="myFieldBindings" [(ngModel)]="manifest"></sf-form>
     </div>
-    <div class="col-md-5 manifest">
+
+    <div class="col-md manifest">
       <div id="manifestAndButtons">
         <h3>Manifest:</h3>
-        <div id="manifest">
+        <div class="overflow-auto" id="manifest">
           <pre>{{ manifest | json }}</pre>
         </div>
         <button [disabled]="!verifyFormValidation()" type="button" [ngClass]="{ banIcon: !verifyFormValidation() }"
@@ -34,5 +37,6 @@
         <input type="file" class="btn btn-outline-primary" (change)="handleFileInput($event.target.files)" />
       </div>
     </div>
+
   </div>
 </div>

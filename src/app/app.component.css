@@ -15,7 +15,6 @@
 #manifest {
   position: static;
   height: 85vh;
-  overflow: scroll;
 }
 
 @media (max-width: 992px) {

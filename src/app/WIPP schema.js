@@ -123,11 +123,11 @@ export const mySchema = {
             "type": "string",
             "title": "ContainerId",
             "description": "Docker image ID",
-            "widget": "customString",
-            "default": "",
             "examples": [
                 "wipp/example-plugin:1.0.0"
             ],
+            "widget": "customString",
+            "default": "",
             "pattern": "^(.*)$"
         },
         "inputs": {
@@ -242,7 +242,7 @@ export const mySchema = {
                             "type": {
                                 "$id": "#/properties/inputs/items/properties/arrayOptions/properties/type",
                                 "type": "string",
-                                "widget": "customString",
+                                "widget": "customSelect",
                                 "title": "Items type",
                                 "description": "Type of the items to be selected",
                                 "enum": [
@@ -348,7 +348,7 @@ export const mySchema = {
                             "widget": {
                                 "$id": "#/properties/inputs/items/properties/arrayOptions/properties/widget",
                                 "type": "string",
-                                "widget": "customString",
+                                "widget": "customSelect",
                                 "title": "Item selection widget",
                                 "description": "How items can be selected (select -> dropdown list with add/remove buttons, checkbox -> multi-selection from list)",
                                 "enum": [
