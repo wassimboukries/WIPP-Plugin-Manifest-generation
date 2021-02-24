@@ -13,8 +13,8 @@ import { DomSanitizer } from '@angular/platform-browser';
 export class AppComponent implements AfterViewInit {
   manifest: any;
   Schema = mySchema;
-  fileUrl;
-  renderedManifest;
+  fileUrl: any;
+  renderedManifest: any;
 
   constructor(
     config: NgbModalConfig,
@@ -39,29 +39,21 @@ export class AppComponent implements AfterViewInit {
   }
 
   verifyFormValidation() {
-    return document.querySelector('form').checkValidity();
+    var result: boolean;
+    result = document.querySelector('form').checkValidity();
+    return result;
   }
 
   mappingRemoveButtons() {
-    var listeInputsButtons;
-    var listeUiButtons;
+    var listeInputsButtons: any;
+    var listeUiButtons: any;
     listeInputsButtons = document.getElementsByClassName('removeInputButton');
     listeUiButtons = document.getElementsByClassName('removeUiButton');
     for (let i = 0; i < listeInputsButtons.length; i++) {
-      if (i >= 1) {
-        listeInputsButtons[i].removeEventListener(
-          'click',
-          this.clickRemoveEventListener(listeUiButtons[i - 1])
-        );
-      }
-      listeInputsButtons[i].addEventListener('click', () =>
-        this.clickRemoveEventListener(listeUiButtons[i])
-      );
+      listeInputsButtons[i].addEventListener('click', () => {
+        listeUiButtons[i].click();
+      });
     }
-  }
-
-  clickRemoveEventListener(element) {
-    element.click();
   }
 
   myFieldBindings = {
@@ -118,22 +110,54 @@ export class AppComponent implements AfterViewInit {
           this.renderedManifest.properties.inputs.required.push(input.name);
         }
         // type-specific properties
-
+        inputSchema['widget'] = 'customSearch';
+        inputSchema['format'] = input.type;
+        inputSchema['type'] = 'string';
         switch (input.type) {
           case 'collection':
+            inputSchema['enum'] = [
+              'collection-A',
+              'collection-B',
+              'collection-C',
+            ];
+            break;
+
           case 'stitchingVector':
+            inputSchema['enum'] = [
+              'stitchingVector-A',
+              'stitchingVector-B',
+              'stitchingVector-C',
+            ];
+            break;
           case 'pyramidAnnotation':
+            inputSchema['enum'] = [
+              'pyramidAnnotation-A',
+              'pyramidAnnotation-B',
+              'pyramidAnnotation-C',
+            ];
+            break;
           case 'pyramid':
+            inputSchema['enum'] = ['pyramid-A', 'pyramid-B', 'pyramid-C'];
+            break;
           case 'tensorflowModel':
+            inputSchema['enum'] = [
+              'tensorflowModel-A',
+              'tensorflowModel-B',
+              'tensorflowModel-C',
+            ];
+            break;
           case 'csvCollection':
+            inputSchema['enum'] = [
+              'csvCollection-A',
+              'csvCollection-B',
+              'csvCollection-C',
+            ];
+            break;
           case 'notebook':
-            inputSchema['type'] = 'string';
-            inputSchema['widget'] = 'search';
-            inputSchema['format'] = input.type;
+            inputSchema['enum'] = ['notebook-A', 'notebook-B', 'notebook-C'];
             //inputSchema['getOutputs'] = () => this.jobOutputs[input.type];
             break;
           case 'enum':
-            inputSchema['type'] = 'string';
             inputSchema['widget'] = 'select';
             inputSchema['oneOf'] = [];
             input.enumOptions.values.forEach((value) => {
@@ -152,7 +176,6 @@ export class AppComponent implements AfterViewInit {
           // Workaround for https://github.com/guillotinaweb/ngx-schema-form/issues/332
           case 'number':
           case 'float':
-            inputSchema['type'] = 'string';
             inputSchema['widget'] = 'integer';
             break;
           default:
