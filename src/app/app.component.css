@@ -2,14 +2,11 @@
   cursor: not-allowed;
 }
 
-.manifestB {
-  margin-right: 10px;
-}
-
 #manifestAndButtons {
   position: fixed;
   margin-left: 50px;
   margin-top: 8px;
+  width: 51%;
 }
 
 #manifest {
@@ -21,10 +18,19 @@
   #manifestAndButtons {
     position: static;
     margin-left: 0px;
-    overflow: visible;
   }
-
   #manifest {
     height: 100%;
   }
+}
+
+#imageWipp {
+  margin: 10px 0 10px 0;
+  width: 100%;
+  align-self: center;
+}
+
+.no-gutters {
+  padding-right: 5px;
+  padding-left: 0;
 }

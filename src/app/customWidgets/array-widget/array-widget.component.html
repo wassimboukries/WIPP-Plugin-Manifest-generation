@@ -37,8 +37,8 @@
         </button>
     </div>
     <button [id]="id === 'ui' ? 'addUiButton' : id == 'inputs' ? 'addInputButton' : ''"
-        [ngClass]="{ 'd-none': id === 'ui' }" (click)="addItem(); cd.detectChanges();"
-        class="btn btn-outline-secondary array-add-button" [disabled]="isAddButtonDisabled()" *ngIf="
+        [ngClass]="{ 'd-none': id === 'ui' }" (click)="addItem()" class="btn btn-outline-secondary array-add-button"
+        [disabled]="isAddButtonDisabled()" *ngIf="
       !(
         schema.hasOwnProperty('minItems') &&
         schema.hasOwnProperty('maxItems') &&

@@ -14,14 +14,18 @@
             ?
         </button>
 
-        <input [name]="name" [attr.readonly]="(schema.widget.id!=='color') && schema.readOnly?true:null"
+        <input #inputField [name]="name" [attr.readonly]="(schema.widget.id!=='color') && schema.readOnly?true:null"
             class="text-widget.id textline-widget form-control"
             [attr.type]="!this.schema.widget.id || this.schema.widget.id === 'string' ? 'text' : this.schema.widget.id"
             [attr.id]="id" [formControl]="control" [attr.placeholder]="schema.placeholder"
             [attr.maxLength]="schema.maxLength || null" [attr.minLength]="schema.minLength || null"
             [attr.required]="schema.isRequired || null"
-            [attr.disabled]="(schema.widget.id=='color' && schema.readOnly)?true:null" autocomplete="off">
-        <span [attr.id]="id + 'Status'"></span>
+            [attr.disabled]="(schema.widget.id=='color' && schema.readOnly)?true:null" autocomplete="off"
+            [attr.pattern]="this.schema.pattern ? this.schema.pattern:null" (change)="ref.detectChanges()">
+        <span *ngIf="!checkIfPatternMatch(inputField.value)" style="color:red;">Value must
+            match the
+            pattern:
+            {{schema.pattern.substring(1, schema.pattern.toString().length - 1)}}</span>
         <input *ngIf="(schema.widget.id==='color' && schema.readOnly)" [attr.name]="name" type="hidden"
             [formControl]="control">
     </div>

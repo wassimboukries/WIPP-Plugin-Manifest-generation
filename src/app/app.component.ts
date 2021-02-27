@@ -34,7 +34,9 @@ export class AppComponent implements AfterViewInit {
       btnAddUi.click();
       this.mappingRemoveButtons();
     });
+  }
 
+  ngAfterViewChecked() {
     this.cd.detectChanges();
   }
 
