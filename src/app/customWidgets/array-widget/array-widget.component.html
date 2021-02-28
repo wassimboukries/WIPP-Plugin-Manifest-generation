@@ -15,7 +15,7 @@
         </button>
     </h4>
 
-    <div *ngFor="let itemProperty of formProperty.properties">
+    <div *ngFor="let itemProperty of formProperty.properties; let i = index">
         <sf-form-element [formProperty]="itemProperty"></sf-form-element>
         <button [class]="
         id === 'ui'
@@ -25,8 +25,9 @@
           : id == 'outputs'
           ? 'removeOutputButton':
           ''
-      " [ngClass]="{ 'd-none': id === 'ui' }" style="margin-bottom: 5px;" (click)="removeItem(itemProperty)"
-            class="btn btn-outline-secondary array-remove-button" [disabled]="isRemoveButtonDisabled()" *ngIf="
+      " [ngClass]="{ 'd-none': id === 'ui' }" style="margin-bottom: 5px;"
+            (click)="removeInputAndUiItem(itemProperty, i)" class="btn btn-outline-secondary array-remove-button"
+            [disabled]="isRemoveButtonDisabled()" *ngIf="
         !(
           schema.hasOwnProperty('minItems') &&
           schema.hasOwnProperty('maxItems') &&
@@ -37,8 +38,8 @@
         </button>
     </div>
     <button [id]="id === 'ui' ? 'addUiButton' : id == 'inputs' ? 'addInputButton' : ''"
-        [ngClass]="{ 'd-none': id === 'ui' }" (click)="addItem()" class="btn btn-outline-secondary array-add-button"
-        [disabled]="isAddButtonDisabled()" *ngIf="
+        [ngClass]="{ 'd-none': id === 'ui' }" (click)="addInputAndUiItem()"
+        class="btn btn-outline-secondary array-add-button" [disabled]="isAddButtonDisabled()" *ngIf="
       !(
         schema.hasOwnProperty('minItems') &&
         schema.hasOwnProperty('maxItems') &&

@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectorRef, Component } from '@angular/core';
+import { AfterViewChecked, ChangeDetectorRef, Component } from '@angular/core';
 import { FormProperty, PropertyGroup } from 'ngx-schema-form';
 import { mySchema } from './WIPP schema.js';
 import { NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
@@ -10,10 +10,9 @@ import { DomSanitizer } from '@angular/platform-browser';
   styleUrls: ['./app.component.css'],
   providers: [NgbModalConfig, NgbModal],
 })
-export class AppComponent implements AfterViewInit {
+export class AppComponent implements AfterViewChecked {
   manifest: any;
   Schema = mySchema;
-  fileUrl: any;
   renderedManifest: any;
 
   constructor(
@@ -25,35 +24,12 @@ export class AppComponent implements AfterViewInit {
     config.backdrop = 'static';
     config.keyboard = false;
   }
-
-  ngAfterViewInit() {
-    var btnAddInput = document.getElementById('addInputButton');
-    var btnAddUi = document.getElementById('addUiButton');
-
-    btnAddInput.addEventListener('click', () => {
-      btnAddUi.click();
-      this.mappingRemoveButtons();
-    });
-  }
-
   ngAfterViewChecked() {
     this.cd.detectChanges();
   }
 
   verifyFormValidation() {
     return document.querySelector('form').checkValidity();
-  }
-
-  mappingRemoveButtons() {
-    var listeInputsButtons: any;
-    var listeUiButtons: any;
-    listeInputsButtons = document.getElementsByClassName('removeInputButton');
-    listeUiButtons = document.getElementsByClassName('removeUiButton');
-    for (let i = 0; i < listeInputsButtons.length; i++) {
-      listeInputsButtons[i].addEventListener('click', () => {
-        listeUiButtons[i].click();
-      });
-    }
   }
 
   myFieldBindings = {
@@ -74,6 +50,21 @@ export class AppComponent implements AfterViewInit {
       },
     ],
   };
+
+  generateUri() {
+    var theJSON = JSON.stringify(this.manifest);
+    var uri = this.sanitizer.bypassSecurityTrustUrl(
+      'data:text/json;charset=UTF-8,' + encodeURIComponent(theJSON)
+    );
+    return uri;
+  }
+
+  handleFileInput(files: FileList) {
+    const reader = new FileReader();
+    reader.readAsText(files.item(0));
+    reader.onload = () =>
+      (this.manifest = JSON.parse(reader.result.toString()));
+  }
 
   open(content) {
     this.modalService.open(content);
@@ -259,21 +250,5 @@ export class AppComponent implements AfterViewInit {
       this.renderedManifest.properties = {};
       this.renderedManifest.isSchemaValid = false;
     }
-  }
-
-  generateUri() {
-    var theJSON = JSON.stringify(this.manifest);
-    var uri = this.sanitizer.bypassSecurityTrustUrl(
-      'data:text/json;charset=UTF-8,' + encodeURIComponent(theJSON)
-    );
-    return uri;
-  }
-
-  handleFileInput(files: FileList) {
-    const reader = new FileReader();
-    reader.readAsText(files.item(0));
-    reader.onload = () =>
-      (this.manifest = JSON.parse(reader.result.toString()));
-    setTimeout(() => this.mappingRemoveButtons(), 30);
   }
 }
