@@ -1,6 +1,6 @@
 import { AfterViewInit, ChangeDetectorRef, Component } from '@angular/core';
 import { FormProperty, PropertyGroup } from 'ngx-schema-form';
-import { mySchema } from './WIPP schema.js';
+import  WippSchema  from './WippSchema.json';
 import { NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
 import { DomSanitizer } from '@angular/platform-browser';
 
@@ -12,7 +12,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 })
 export class AppComponent implements AfterViewInit {
   manifest: any;
-  Schema = mySchema;
+  Schema = WippSchema;
   fileUrl: any;
   renderedManifest: any;
 
