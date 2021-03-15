@@ -6,6 +6,7 @@ import { debounceTime, distinctUntilChanged, map } from 'rxjs/operators';
 @Component({
   selector: 'app-search-widget',
   templateUrl: './search-widget.component.html',
+  styleUrls: ['./search-widget.component.css'],
 })
 export class SearchWidgetComponent extends StringWidget {
   search = (text$: Observable<string>) =>
@@ -18,4 +19,10 @@ export class SearchWidgetComponent extends StringWidget {
         )
       )
     );
+
+  checkIfPatternMatch(value: string) {
+    var patt = new RegExp(this.schema.pattern);
+    if (patt.test(value)) return true;
+    return false;
+  }
 }

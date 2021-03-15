@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectorRef, Component } from '@angular/core';
+import { AfterViewChecked, ChangeDetectorRef, Component } from '@angular/core';
 import { FormProperty, PropertyGroup } from 'ngx-schema-form';
 import  WippSchema  from './WippSchema.json';
 import { NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
@@ -10,7 +10,7 @@ import { DomSanitizer } from '@angular/platform-browser';
   styleUrls: ['./app.component.css'],
   providers: [NgbModalConfig, NgbModal],
 })
-export class AppComponent implements AfterViewInit {
+export class AppComponent implements AfterViewChecked {
   manifest: any;
   Schema = WippSchema;
   fileUrl: any;
@@ -25,35 +25,12 @@ export class AppComponent implements AfterViewInit {
     config.backdrop = 'static';
     config.keyboard = false;
   }
-
-  ngAfterViewInit() {
-    var btnAddInput = document.getElementById('addInputButton');
-    var btnAddUi = document.getElementById('addUiButton');
-
-    btnAddInput.addEventListener('click', () => {
-      btnAddUi.click();
-      this.mappingRemoveButtons();
-    });
-
+  ngAfterViewChecked() {
     this.cd.detectChanges();
   }
 
   verifyFormValidation() {
-    var result: boolean;
-    result = document.querySelector('form').checkValidity();
-    return result;
-  }
-
-  mappingRemoveButtons() {
-    var listeInputsButtons: any;
-    var listeUiButtons: any;
-    listeInputsButtons = document.getElementsByClassName('removeInputButton');
-    listeUiButtons = document.getElementsByClassName('removeUiButton');
-    for (let i = 0; i < listeInputsButtons.length; i++) {
-      listeInputsButtons[i].addEventListener('click', () => {
-        listeUiButtons[i].click();
-      });
-    }
+    return document.querySelector('form').checkValidity();
   }
 
   myFieldBindings = {
@@ -74,6 +51,21 @@ export class AppComponent implements AfterViewInit {
       },
     ],
   };
+
+  generateUri() {
+    var theJSON = JSON.stringify(this.manifest);
+    var uri = this.sanitizer.bypassSecurityTrustUrl(
+      'data:text/json;charset=UTF-8,' + encodeURIComponent(theJSON)
+    );
+    return uri;
+  }
+
+  handleFileInput(files: FileList) {
+    const reader = new FileReader();
+    reader.readAsText(files.item(0));
+    reader.onload = () =>
+      (this.manifest = JSON.parse(reader.result.toString()));
+  }
 
   open(content) {
     this.modalService.open(content);
@@ -110,9 +102,7 @@ export class AppComponent implements AfterViewInit {
           this.renderedManifest.properties.inputs.required.push(input.name);
         }
         // type-specific properties
-        inputSchema['widget'] = 'customSearch';
-        inputSchema['format'] = input.type;
-        inputSchema['type'] = 'string';
+
         switch (input.type) {
           case 'collection':
             inputSchema['enum'] = [
@@ -120,6 +110,8 @@ export class AppComponent implements AfterViewInit {
               'collection-B',
               'collection-C',
             ];
+            inputSchema['widget'] = 'customSearch';
+            inputSchema['type'] = 'string';
             break;
 
           case 'stitchingVector':
@@ -128,6 +120,8 @@ export class AppComponent implements AfterViewInit {
               'stitchingVector-B',
               'stitchingVector-C',
             ];
+            inputSchema['widget'] = 'customSearch';
+            inputSchema['type'] = 'string';
             break;
           case 'pyramidAnnotation':
             inputSchema['enum'] = [
@@ -135,9 +129,13 @@ export class AppComponent implements AfterViewInit {
               'pyramidAnnotation-B',
               'pyramidAnnotation-C',
             ];
+            inputSchema['widget'] = 'customSearch';
+            inputSchema['type'] = 'string';
             break;
           case 'pyramid':
             inputSchema['enum'] = ['pyramid-A', 'pyramid-B', 'pyramid-C'];
+            inputSchema['widget'] = 'customSearch';
+            inputSchema['type'] = 'string';
             break;
           case 'tensorflowModel':
             inputSchema['enum'] = [
@@ -145,6 +143,8 @@ export class AppComponent implements AfterViewInit {
               'tensorflowModel-B',
               'tensorflowModel-C',
             ];
+            inputSchema['widget'] = 'customSearch';
+            inputSchema['type'] = 'string';
             break;
           case 'csvCollection':
             inputSchema['enum'] = [
@@ -152,12 +152,18 @@ export class AppComponent implements AfterViewInit {
               'csvCollection-B',
               'csvCollection-C',
             ];
+            inputSchema['widget'] = 'customSearch';
+            inputSchema['type'] = 'string';
             break;
           case 'notebook':
             inputSchema['enum'] = ['notebook-A', 'notebook-B', 'notebook-C'];
+            inputSchema['widget'] = 'customSearch';
+            inputSchema['type'] = 'string';
+            inputSchema['format'] = input.type;
             //inputSchema['getOutputs'] = () => this.jobOutputs[input.type];
             break;
           case 'enum':
+            inputSchema['type'] = 'string';
             inputSchema['widget'] = 'select';
             inputSchema['oneOf'] = [];
             input.enumOptions.values.forEach((value) => {
@@ -176,6 +182,7 @@ export class AppComponent implements AfterViewInit {
           // Workaround for https://github.com/guillotinaweb/ngx-schema-form/issues/332
           case 'number':
           case 'float':
+            inputSchema['type'] = 'string';
             inputSchema['widget'] = 'integer';
             break;
           default:
@@ -220,6 +227,7 @@ export class AppComponent implements AfterViewInit {
                 target.setValue(formProperty.value, false);
               },
             },
+            '2',
           ];
         }
         if (ui.hasOwnProperty('default')) {
@@ -243,21 +251,5 @@ export class AppComponent implements AfterViewInit {
       this.renderedManifest.properties = {};
       this.renderedManifest.isSchemaValid = false;
     }
-  }
-
-  generateUri() {
-    var theJSON = JSON.stringify(this.manifest);
-    var uri = this.sanitizer.bypassSecurityTrustUrl(
-      'data:text/json;charset=UTF-8,' + encodeURIComponent(theJSON)
-    );
-    return uri;
-  }
-
-  handleFileInput(files: FileList) {
-    const reader = new FileReader();
-    reader.readAsText(files.item(0));
-    reader.onload = () =>
-      (this.manifest = JSON.parse(reader.result.toString()));
-    setTimeout(() => this.mappingRemoveButtons(), 30);
   }
 }

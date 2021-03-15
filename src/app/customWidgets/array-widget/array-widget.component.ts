@@ -1,12 +1,26 @@
-import { AfterViewInit, ChangeDetectorRef, Component } from '@angular/core';
-import { ArrayWidget } from 'ngx-schema-form';
+import { Component } from '@angular/core';
+import { ArrayWidget, FormProperty } from 'ngx-schema-form';
 
 @Component({
   selector: 'sf-array-widget',
   templateUrl: 'array-widget.component.html',
 })
 export class ArrayWidgetComponent extends ArrayWidget {
-  constructor(private cd: ChangeDetectorRef) {
-    super();
+  removeInputAndUiItem(item: FormProperty, i: number) {
+    this.removeItem(item);
+    if (this.id == 'inputs') {
+      var removeUiButton: any;
+      removeUiButton = document.getElementsByClassName('removeUiButton')[i];
+      removeUiButton.click();
+    }
+  }
+
+  addInputAndUiItem() {
+    this.addItem();
+    if (this.id == 'inputs') {
+      var btnAddUi: any;
+      btnAddUi = document.getElementById('addUiButton');
+      btnAddUi.click();
+    }
   }
 }

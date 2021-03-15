@@ -1,0 +1,10 @@
+input:invalid {
+    border-left-color: red;
+    border-left-width: 2px;
+  }
+  
+  input:valid {
+    border-left-color: green;
+    border-left-width: 2px;
+  }
+  
